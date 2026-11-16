@@ -1,0 +1,11 @@
+{
+  "start_instability": 20,
+  "threshold": 70,
+  "wrong_tool_penalty": 8,
+  "success_reward": 5,
+  "idle_growth": 0.4,
+  "freeze_seconds": 6,
+  "freeze_motion_limit": 1.0,
+  "freeze_penalty": 15,
+  "calm_after_wake": 45
+}

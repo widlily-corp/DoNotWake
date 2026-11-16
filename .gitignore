@@ -1,0 +1,15 @@
+# Godot 4
+.godot/
+*.translation
+
+# сборки и архивы
+build/
+dist/
+*.zip
+*.exe
+*.pck
+
+# система
+Thumbs.db
+.DS_Store
+desktop.ini
