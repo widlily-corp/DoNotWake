@@ -1,0 +1,25 @@
+{
+  "obsidian": "#080808",
+  "gunmetal": "#1A2028",
+  "graphite": "#323230",
+  "storm_gray": "#3A4450",
+  "steel": "#5A5A59",
+  "slate": "#606C78",
+  "antique_tin": "#6F7174",
+  "titanium": "#D2D7D1",
+  "pale_steel": "#C4CDD6",
+  "cloud_white": "#EDF0F4",
+  "cool_slate": "#D1CCC7",
+  "rust": "#8B4944",
+  "alert": "#E62815",
+  "signal": "#748B91",
+  "lamp_warm": "#D8C29A",
+  "roles": {
+    "background": ["obsidian", "gunmetal", "graphite"],
+    "structure": ["storm_gray", "steel", "slate", "antique_tin"],
+    "light": ["titanium", "pale_steel", "cloud_white"],
+    "story": ["cool_slate", "rust"],
+    "state": ["alert", "signal"],
+    "tint": ["lamp_warm"]
+  }
+}
