@@ -1,7 +1,7 @@
 class_name Balance
 extends RefCounted
 
-## Загрузка и доступ к параметрам баланса из JSON
+## Загрузка и типизированный доступ к параметрам баланса из data/robot.json
 const DEFAULT_CONFIG_PATH: String = "res://data/robot.json"
 
 var data: Dictionary = {}
@@ -47,3 +47,17 @@ func get_int(key: String, fallback: int = 0) -> int:
 	if data.has(key):
 		return int(data[key])
 	return fallback
+
+
+func get_stages() -> Array:
+	var st: Variant = data.get("stages", [])
+	if st is Array:
+		return st
+	return []
+
+
+func get_tools() -> Array:
+	var tl: Variant = data.get("tools", [])
+	if tl is Array:
+		return tl
+	return []

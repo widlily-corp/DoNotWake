@@ -1,0 +1,218 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
+[ext_resource type="Shader" path="res://shaders/crt_screen.gdshader" id="2_shader"]
+[ext_resource type="AudioStream" path="res://assets/sounds/click.wav" id="3_click"]
+[ext_resource type="AudioStream" path="res://assets/sounds/vhs_insert.wav" id="4_vhs"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("2_shader")
+shader_parameter/scanline_count = 360.0
+shader_parameter/scanline_intensity = 0.22
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/curvature = 0.02
+shader_parameter/phosphor_tint = Color(0.88, 0.98, 0.94, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cassette"]
+bg_color = Color(0.22, 0.25, 0.28, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.42, 0.46, 0.52, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.03, 0.04, 1)
+
+[node name="TVBezel" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 32.0
+offset_right = 1168.0
+offset_bottom = 504.0
+color = Color(0.10, 0.12, 0.15, 1)
+
+[node name="CRTScreen" type="ColorRect" parent="TVBezel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 48.0
+offset_right = 1008.0
+offset_bottom = 428.0
+color = Color(0.05, 0.08, 0.09, 1)
+
+[node name="VBoxTop" type="VBoxContainer" parent="TVBezel/CRTScreen"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = 56.0
+grow_horizontal = 2
+
+[node name="StatusBar" type="HBoxContainer" parent="TVBezel/CRTScreen/VBoxTop"]
+layout_mode = 2
+
+[node name="RecLabel" type="Label" parent="TVBezel/CRTScreen/VBoxTop/StatusBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.15, 0.1, 1)
+theme_override_font_sizes/font_size = 18
+text = "● REC"
+
+[node name="Spacer" type="Control" parent="TVBezel/CRTScreen/VBoxTop/StatusBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimecodeLabel" type="Label" parent="TVBezel/CRTScreen/VBoxTop/StatusBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
+theme_override_font_sizes/font_size = 18
+text = "CH 03   SP   00:14:28:02"
+
+[node name="VBoxMenu" type="VBoxContainer" parent="TVBezel/CRTScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -120.0
+offset_right = 220.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="TVBezel/CRTScreen/VBoxMenu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.94, 0.96, 1)
+theme_override_font_sizes/font_size = 46
+text = "DO NOT WAKE"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="TVBezel/CRTScreen/VBoxMenu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
+theme_override_font_sizes/font_size = 16
+text = "СИСТЕМА ДИАГНОСТИКИ И РЕМОНТА v0.3"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="TVBezel/CRTScreen/VBoxMenu"]
+layout_mode = 2
+
+[node name="BtnNewShift" type="Button" parent="TVBezel/CRTScreen/VBoxMenu"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
+theme_override_colors/font_hover_color = Color(0.93, 0.94, 0.96, 1)
+theme_override_font_sizes/font_size = 20
+text = "> НОВАЯ СМЕНА"
+flat = true
+
+[node name="BtnContinue" type="Button" parent="TVBezel/CRTScreen/VBoxMenu"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.25, 0.28, 0.32, 1)
+theme_override_font_sizes/font_size = 18
+disabled = true
+text = "  ПРОДОЛЖИТЬ (НЕТ СОХРАНЕНИЙ)"
+flat = true
+
+[node name="BtnQuit" type="Button" parent="TVBezel/CRTScreen/VBoxMenu"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
+theme_override_colors/font_hover_color = Color(0.9, 0.25, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "  ВЫХОД"
+flat = true
+
+[node name="VHSDeck" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 524.0
+offset_right = 1060.0
+offset_bottom = 680.0
+color = Color(0.14, 0.16, 0.19, 1)
+
+[node name="SlotBacking" type="ColorRect" parent="VHSDeck"]
+layout_mode = 0
+offset_left = 172.0
+offset_top = 16.0
+offset_right = 668.0
+offset_bottom = 112.0
+color = Color(0.06, 0.07, 0.08, 1)
+
+[node name="Cassette" type="Button" parent="VHSDeck"]
+layout_mode = 0
+offset_left = 172.0
+offset_top = 16.0
+offset_right = 668.0
+offset_bottom = 112.0
+theme_override_colors/font_color = Color(0.82, 0.84, 0.86, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_cassette")
+text = "[ VHS: DO NOT WAKE // СМЕНА 01 ]
+КЛИКНИТЕ, ЧТОБЫ ВСТАВИТЬ КАССЕТУ И НАЧАТЬ"
+
+[node name="PlayIndicator" type="Label" parent="VHSDeck"]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 48.0
+offset_right = 780.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
+theme_override_font_sizes/font_size = 32
+text = "▶"
+
+[node name="DeckLabel" type="Label" parent="VHSDeck"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 64.0
+offset_right = 150.0
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(0.35, 0.38, 0.42, 1)
+theme_override_font_sizes/font_size = 14
+text = "EVILBYTE D-900"
+
+[node name="CRTPostProcess" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_crt")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SFXClick" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_click")
+
+[node name="SFXVHS" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_vhs")
+
+[connection signal="pressed" from="TVBezel/CRTScreen/VBoxMenu/BtnNewShift" to="." method="_on_new_shift_pressed"]
+[connection signal="pressed" from="TVBezel/CRTScreen/VBoxMenu/BtnQuit" to="." method="_on_quit_pressed"]
+[connection signal="gui_input" from="VHSDeck/Cassette" to="." method="_on_cassette_gui_input"]
+[connection signal="pressed" from="VHSDeck/Cassette" to="." method="_on_new_shift_pressed"]
