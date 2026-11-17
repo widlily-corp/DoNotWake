@@ -16,7 +16,9 @@
 
 | Модель | Что сгенерировано | Область использования | Доработано вручную |
 |---|---|---|---|
-| | | | |
+| Gemini Imagen (gemini-3.1-flash-image) | Блок-аут мастерской (`blockout_room`) | `docs/blockout_room.png` | Ресайз до 1280×720, выравнивание пропорций под сцену |
+| Gemini Imagen (gemini-3.1-flash-image) | Спрайт выключенного робота (`robot_calm`) | `assets/sprites/robot/robot_calm.png` | Удаление фона #FF00FF (bg_remover), дефрингинг контура, Nearest Neighbor ужимка до 256×320, карта нормалей |
+| Gemini Imagen (gemini-3.1-flash-image) | Спрайт пробуждённого робота (`robot_awake`) | `assets/sprites/robot/robot_awake.png` | Удаление фона #FF00FF (bg_remover), дефрингинг контура, Nearest Neighbor ужимка до 256×320, карта нормалей |
 
 ## Шрифты
 
