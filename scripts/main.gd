@@ -3,6 +3,9 @@ extends Node2D
 ## Петля: выбрать инструмент -> применить к зоне робота -> отклик -> изменилась нестабильность.
 ## Все числа баланса лежат в res://data/robot.json (data-driven, без магии в коде).
 
+## Путь к сцене главного меню. Поменяй под свой проект, если файл называется иначе.
+const MAIN_MENU_PATH := "res://scenes/ui/MainMenu.tscn"
+
 var cfg: Dictionary = {}
 var font: Font = ThemeDB.fallback_font
 
@@ -17,6 +20,8 @@ var message: String = ""
 var zones: Array = []
 var tools: Array = []
 
+@onready var sfx_click: AudioStreamPlayer = $SfxClick
+@onready var sfx_wake: AudioStreamPlayer = $SfxWake
 
 func _ready() -> void:
 	cfg = _load_config("res://data/robot.json")
@@ -68,6 +73,12 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	# Esc -> главное меню. Проверяем в самом начале, чтобы работало в любом состоянии.
+	if event is InputEventKey and event.pressed and not event.echo:
+		if (event as InputEventKey).keycode == KEY_ESCAPE:
+			_exit_to_menu()
+			return
+
 	if state == "done" or state == "fail":
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			get_tree().reload_current_scene()
@@ -83,6 +94,20 @@ func _input(event: InputEvent) -> void:
 		_on_click((event as InputEventMouseButton).position)
 
 
+func _play_click(pitch: float = 1.0) -> void:
+	sfx_click.pitch_scale = pitch
+	sfx_click.play()
+
+
+func _exit_to_menu() -> void:
+	get_tree().paused = false
+	Engine.time_scale = 1.0
+	sfx_wake.stop()
+	var err := get_tree().change_scene_to_file(MAIN_MENU_PATH)
+	if err != OK:
+		push_error("Не удалось открыть главное меню: %s (код %d)" % [MAIN_MENU_PATH, err])
+
+
 func _on_click(pos: Vector2) -> void:
 	if state == "awake":
 		return
@@ -91,6 +116,7 @@ func _on_click(pos: Vector2) -> void:
 		if (tool["rect"] as Rect2).has_point(pos):
 			selected_tool = str(tool["id"])
 			message = "Выбрано: " + str(tool["label"])
+			_play_click()
 			return
 
 	for i in zones.size():
@@ -109,10 +135,12 @@ func _use_zone(index: int) -> void:
 		zone["done"] = true
 		instability = maxf(instability - _num("success_reward", 5.0), 0.0)
 		message = "Сделано: " + str(zone["label"])
+		_play_click(1.18)
 	else:
 		instability = minf(instability + _num("wrong_tool_penalty", 8.0), 100.0)
 		flash = 0.45
 		message = "Не тот инструмент"
+		_play_click(0.82)
 
 	if _all_done():
 		state = "done"
@@ -133,6 +161,7 @@ func _start_wake() -> void:
 	state = "awake"
 	freeze_left = _num("freeze_seconds", 6.0)
 	message = "Робот просыпается"
+	sfx_wake.play()
 
 
 func _break_freeze() -> void:
@@ -141,6 +170,7 @@ func _break_freeze() -> void:
 	flash = 0.5
 	if instability >= 100.0:
 		state = "fail"
+		sfx_wake.stop()
 
 
 func _calm_down() -> void:
@@ -148,6 +178,7 @@ func _calm_down() -> void:
 	instability = _num("calm_after_wake", 45.0)
 	threshold = maxf(threshold - 5.0, 45.0)
 	message = "Робот успокоился. Порог снизился"
+	sfx_wake.stop()
 
 
 func _draw() -> void:
@@ -196,6 +227,9 @@ func _draw() -> void:
 	draw_rect(Rect2(240, 42, 300, 24), Color(0.18, 0.18, 0.21))
 	draw_rect(Rect2(240, 42, 300.0 * clampf(instability / 100.0, 0.0, 1.0), 24), Color(0.85, 0.35, 0.25))
 	draw_string(font, Vector2(556, 62), str(int(instability)), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.9, 0.9, 0.9))
+
+	# Подсказка про выход в меню
+	draw_string(font, Vector2(40, 100), "ESC — главное меню", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.55, 0.58, 0.62))
 
 	if message != "":
 		draw_string(font, Vector2(560, 660), message, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.85, 0.85, 0.88))
