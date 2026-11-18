@@ -16,7 +16,9 @@
 
 | Модель | Что сгенерировано | Область использования | Доработано вручную |
 |---|---|---|---|
-| | | | |
+| Gemini Imagen (gemini-3.1-flash-image) | Блок-аут мастерской (`blockout_room`) | `docs/blockout_room.png` | Ресайз до 1280×720, выравнивание пропорций под сцену |
+| Gemini Imagen (gemini-3.1-flash-image) | Спрайт выключенного робота (`robot_calm`) | `assets/sprites/robot/robot_calm.png` | Удаление фона #FF00FF (bg_remover), дефрингинг контура, Nearest Neighbor ужимка до 256×320, карта нормалей |
+| Gemini Imagen (gemini-3.1-flash-image) | Спрайт пробуждённого робота (`robot_awake`) | `assets/sprites/robot/robot_awake.png` | Удаление фона #FF00FF (bg_remover), дефрингинг контура, Nearest Neighbor ужимка до 256×320, карта нормалей |
 
 ## Шрифты
 
@@ -27,21 +29,14 @@
 
 ## Звуки
 
-Все звуки — CC0, лежат в `assets/sounds/`, в игре проигрываются через `AudioStreamPlayer`
-(сцена `scenes/Main.tscn`, узлы `SfxClick` и `SfxWake`).
-
-| Звук | Файл | Ссылка | Лицензия | Где использовано |
-|---|---|---|---|---|
-| щелчок | `assets/sounds/mouse click.wav` | страницу freesound вписать | CC0 | выбор инструмента, ремонт зоны (`SfxClick`) |
-| тревожный гул | `assets/sounds/horror-drone.wav` | страницу freesound вписать | CC0 | пробуждение робота, зациклен (`SfxWake`) |
-
-Примечания по файлам:
-- `mouse click.wav` — исходник был 24-битный `WAVE_FORMAT_EXTENSIBLE`, Godot такой не импортирует
-  («Format not supported for WAVE file (not PCM)»). Конвертирован в обычный 16-бит PCM 48 кГц без потери
-  слышимого качества (пик 29122 из 32767, без клиппинга).
-- `horror-drone.wav` — 10 с, 44.1 кГц, стерео; в настройках импорта включён `edit/loop_mode=Forward`,
-  поэтому гул не обрывается, пока робот не успокоится.
-- Параметр `edit/loop_mode` считает «0 = Detect From WAV», поэтому «Forward» — это **2**, а не 1.
+| Звук | Ссылка | Лицензия | Где использовано |
+|---|---|---|---|
+| click.wav | процедурный синтез (Python wave) | CC0 / Original | выбор инструмента, клики меню |
+| repair_success.wav | процедурный синтез (Python wave) | CC0 / Original | успешный ремонт зоны |
+| error_buzz.wav | процедурный синтез (Python wave) | CC0 / Original | ошибка выбора инструмента / нарушение замирания |
+| robot_awake.wav | процедурный синтез (Python wave) | CC0 / Original | тревожный сигнал пробуждения |
+| calm_down.wav | процедурный синтез (Python wave) | CC0 / Original | гидравлический сброс при успокоении |
+| vhs_insert.wav | процедурный синтез (Python wave) | CC0 / Original | защелкивание кассеты в меню |
 
 ## Инструменты
 

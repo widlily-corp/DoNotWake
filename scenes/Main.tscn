@@ -1,20 +1,52 @@
-[gd_scene load_steps=5 format=3 uid="uid://tfh4wo185dou"]
+[gd_scene load_steps=11 format=3]
 
-[ext_resource type="Script" uid="uid://bowm8h3sof3e0" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="AudioStream" uid="uid://e7javygo35cn" path="res://assets/sounds/mouse click.wav" id="2_click"]
-[ext_resource type="AudioStream" uid="uid://dyasri45wh00j" path="res://assets/sounds/horror-drone.wav" id="3_drone"]
-[ext_resource type="Script" path="res://scripts/core/game_state.gd" id="4_game_state"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/core/game_state.gd" id="2_game_state"]
+[ext_resource type="AudioStream" path="res://assets/sounds/click.wav" id="3_click"]
+[ext_resource type="AudioStream" path="res://assets/sounds/repair_success.wav" id="4_repair"]
+[ext_resource type="AudioStream" path="res://assets/sounds/error_buzz.wav" id="5_error"]
+[ext_resource type="AudioStream" path="res://assets/sounds/robot_awake.wav" id="6_wake"]
+[ext_resource type="AudioStream" path="res://assets/sounds/calm_down.wav" id="7_calm"]
+[ext_resource type="PackedScene" path="res://scenes/ui/EndScreen.tscn" id="8_endscreen"]
+[ext_resource type="Shader" path="res://shaders/crt_screen.gdshader" id="9_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("9_shader")
+shader_parameter/scanline_count = 360.0
+shader_parameter/scanline_intensity = 0.18
+shader_parameter/vignette_intensity = 0.35
+shader_parameter/curvature = 0.015
+shader_parameter/phosphor_tint = Color(0.92, 0.98, 0.96, 1)
 
 [node name="Main" type="Node2D" unique_id=225486349]
 script = ExtResource("1_main")
 
 [node name="GameState" type="Node" parent="."]
-script = ExtResource("4_game_state")
+script = ExtResource("2_game_state")
 
-[node name="SfxClick" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_click")
-volume_db = -6.0
+[node name="Audio" type="Node" parent="."]
 
-[node name="SfxWake" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_drone")
-volume_db = -10.0
+[node name="SFXClick" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("3_click")
+
+[node name="SFXRepair" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("4_repair")
+
+[node name="SFXError" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("5_error")
+
+[node name="SFXWake" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("6_wake")
+
+[node name="SFXCalm" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("7_calm")
+
+[node name="CRTPostProcess" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_crt")
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+
+[node name="EndScreen" parent="." instance=ExtResource("8_endscreen")]
+offset_right = 1280.0
+offset_bottom = 720.0

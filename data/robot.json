@@ -1,11 +1,75 @@
 {
-  "start_instability": 20,
-  "threshold": 70,
-  "wrong_tool_penalty": 8,
-  "success_reward": 5,
-  "idle_growth": 0.4,
-  "freeze_seconds": 6,
-  "freeze_motion_limit": 1.0,
-  "freeze_penalty": 15,
-  "calm_after_wake": 45
+  "start_instability": 20.0,
+  "threshold": 70.0,
+  "threshold_drop_per_wake": 5.0,
+  "min_threshold": 40.0,
+  "wrong_tool_penalty": 10.0,
+  "success_reward": 8.0,
+  "idle_growth": 0.45,
+  "freeze_seconds": 6.0,
+  "freeze_motion_limit": 1.2,
+  "freeze_penalty": 15.0,
+  "calm_after_wake": 45.0,
+  "max_wakes_allowed": 3,
+  "stages": [
+    {
+      "id": "clean",
+      "title": "ЭТАП 1: ЧИСТКА",
+      "instruction": "Удалите пыль и нагар с контактов",
+      "recommended_tool": "cloth",
+      "zones": [
+        {
+          "id": "contacts",
+          "label": "Контакты сервопривода",
+          "tool": "cloth",
+          "rect": [585, 445, 190, 105]
+        }
+      ]
+    },
+    {
+      "id": "replace",
+      "title": "ЭТАП 2: ЗАМЕНА ДЕТАЛЕЙ",
+      "instruction": "Вскройте крепёж силовой панели",
+      "recommended_tool": "screwdriver",
+      "zones": [
+        {
+          "id": "panel",
+          "label": "Силовая панель",
+          "tool": "screwdriver",
+          "rect": [585, 315, 190, 105]
+        }
+      ]
+    },
+    {
+      "id": "firmware",
+      "title": "ЭТАП 3: КАЛИБРОВКА И ПРОШИВКА",
+      "instruction": "Введите команды сброса аварийных регистров",
+      "recommended_tool": "keyboard",
+      "zones": [
+        {
+          "id": "terminal",
+          "label": "Диагностический порт",
+          "tool": "keyboard",
+          "rect": [585, 200, 190, 95]
+        }
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "id": "cloth",
+      "label": "Тряпка",
+      "rect": [120, 615, 220, 72]
+    },
+    {
+      "id": "screwdriver",
+      "label": "Отвёртка",
+      "rect": [370, 615, 220, 72]
+    },
+    {
+      "id": "keyboard",
+      "label": "Клавиатура",
+      "rect": [620, 615, 220, 72]
+    }
+  ]
 }
