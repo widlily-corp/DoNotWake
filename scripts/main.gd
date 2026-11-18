@@ -34,9 +34,6 @@ const COLOR_SUCCESS: Color = Color(0.35, 0.92, 0.58)
 
 var tools: Array = []
 
-@onready var sfx_click: AudioStreamPlayer = $SfxClick
-@onready var sfx_wake: AudioStreamPlayer = $SfxWake
-
 func _ready() -> void:
 	tex_robot_calm = load("res://assets/sprites/robot/robot_calm.png")
 	tex_robot_awake = load("res://assets/sprites/robot/robot_awake.png")
