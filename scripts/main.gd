@@ -11,10 +11,14 @@ extends Node2D
 @onready var sfx_wake: AudioStreamPlayer = $Audio/SFXWake
 @onready var sfx_calm: AudioStreamPlayer = $Audio/SFXCalm
 
-# Текстуры робота
+# Текстуры робота и UI
 var tex_robot_calm: Texture2D
 var tex_robot_awake: Texture2D
 var tex_room_blockout: Texture2D
+var tex_tool_cloth: Texture2D
+var tex_tool_screw: Texture2D
+var tex_tool_keyb: Texture2D
+var tex_gauge: Texture2D
 
 var font: Font = ThemeDB.fallback_font
 var selected_tool: String = "cloth"
@@ -39,6 +43,15 @@ func _ready() -> void:
 	tex_robot_awake = load("res://assets/sprites/robot/robot_awake.png")
 	if ResourceLoader.exists("res://docs/blockout_room.png"):
 		tex_room_blockout = load("res://docs/blockout_room.png")
+
+	if ResourceLoader.exists("res://assets/sprites/ui/tool_cloth.png"):
+		tex_tool_cloth = load("res://assets/sprites/ui/tool_cloth.png")
+	if ResourceLoader.exists("res://assets/sprites/ui/tool_screwdriver.png"):
+		tex_tool_screw = load("res://assets/sprites/ui/tool_screwdriver.png")
+	if ResourceLoader.exists("res://assets/sprites/ui/tool_keyboard.png"):
+		tex_tool_keyb = load("res://assets/sprites/ui/tool_keyboard.png")
+	if ResourceLoader.exists("res://assets/sprites/ui/gauge_meter.png"):
+		tex_gauge = load("res://assets/sprites/ui/gauge_meter.png")
 
 	if game_state:
 		game_state.feedback_triggered.connect(_on_feedback)
@@ -196,7 +209,7 @@ func _draw() -> void:
 				draw_rect(r, z_color, false, 2.0)
 				draw_string(font, r.position + Vector2(6, -8), str(z.get("label", "")), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, COLOR_TEXT_LIGHT)
 
-	# 5. Панель инструментов
+	# 5. Панель инструментов (объёмные металлические слоты со спрайтами)
 	for t in tools:
 		var raw_rect: Variant = t.get("rect", null)
 		if raw_rect is Rect2 or (raw_rect is Array and (raw_rect as Array).size() == 4):
@@ -207,22 +220,43 @@ func _draw() -> void:
 				var arr := raw_rect as Array
 				r = Rect2(float(arr[0]), float(arr[1]), float(arr[2]), float(arr[3]))
 
-			var is_selected: bool = (selected_tool == str(t.get("id", "")))
-			var fill_color := Color(0.24, 0.35, 0.44) if is_selected else Color(0.14, 0.16, 0.19)
-			var border_color := COLOR_TEXT_LIGHT if is_selected else Color(0.32, 0.36, 0.42)
-			draw_rect(r, fill_color)
-			draw_rect(r, border_color, false, 2.0)
-			draw_string(font, r.position + Vector2(16, 44), str(t.get("label", "")), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, COLOR_TEXT_LIGHT)
+			var t_id := str(t.get("id", ""))
+			var is_selected: bool = (selected_tool == t_id)
+			var fill_color := Color(0.20, 0.28, 0.35) if is_selected else Color(0.12, 0.14, 0.17)
+			var border_color := Color(0.92, 0.94, 0.96) if is_selected else Color(0.35, 0.40, 0.46)
 
-	# 6. Верхний статус-бар: Нестабильность и Порог
-	draw_rect(Rect2(40, 24, 600, 70), Color(0.08, 0.10, 0.12, 0.9))
-	draw_rect(Rect2(40, 24, 600, 70), COLOR_BENCH_EDGE, false, 2.0)
+			# Объёмная подложка ячейки (скосы и фаски)
+			draw_rect(r, fill_color)
+			draw_rect(r, border_color, false, 2.0 if not is_selected else 3.0)
+
+			# Отрисовка объёмной иконки инструмента
+			var icon_tex: Texture2D = null
+			if t_id == "cloth":
+				icon_tex = tex_tool_cloth
+			elif t_id == "screwdriver":
+				icon_tex = tex_tool_screw
+			elif t_id == "keyboard":
+				icon_tex = tex_tool_keyb
+
+			if icon_tex:
+				var icon_rect := Rect2(r.position + Vector2(6, 6), Vector2(60, 60))
+				draw_texture_rect(icon_tex, icon_rect, false)
+				draw_string(font, r.position + Vector2(74, 44), str(t.get("label", "")), HORIZONTAL_ALIGNMENT_LEFT, -1, 18, COLOR_TEXT_LIGHT)
+			else:
+				draw_string(font, r.position + Vector2(16, 44), str(t.get("label", "")), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, COLOR_TEXT_LIGHT)
+
+	# 6. Верхний статус-бар: Нестабильность и Аналоговый манометр
+	draw_rect(Rect2(40, 24, 620, 72), Color(0.08, 0.10, 0.12, 0.9))
+	draw_rect(Rect2(40, 24, 620, 72), COLOR_BENCH_EDGE, false, 2.0)
+
+	if tex_gauge:
+		draw_texture_rect(tex_gauge, Rect2(48, 28, 64, 64), false)
 
 	var cur_inst := game_state.robot.instability if (game_state and game_state.robot) else 20.0
 	var cur_thresh := game_state.robot.threshold if (game_state and game_state.robot) else 70.0
 
-	draw_string(font, Vector2(56, 52), "НЕСТАБИЛЬНОСТЬ", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, COLOR_TEXT_DIM)
-	var bar_rect := Rect2(210, 38, 300, 20)
+	draw_string(font, Vector2(120, 52), "НЕСТАБИЛЬНОСТЬ", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, COLOR_TEXT_DIM)
+	var bar_rect := Rect2(270, 38, 260, 22)
 	draw_rect(bar_rect, Color(0.16, 0.18, 0.22))
 
 	var fill_w := bar_rect.size.x * clampf(cur_inst / 100.0, 0.0, 1.0)
@@ -233,7 +267,7 @@ func _draw() -> void:
 	var thresh_x := bar_rect.position.x + bar_rect.size.x * clampf(cur_thresh / 100.0, 0.0, 1.0)
 	draw_line(Vector2(thresh_x, bar_rect.position.y - 4), Vector2(thresh_x, bar_rect.position.y + bar_rect.size.y + 4), COLOR_ALERT, 3.0)
 
-	draw_string(font, Vector2(525, 54), "%d%%" % int(cur_inst), HORIZONTAL_ALIGNMENT_LEFT, -1, 18, COLOR_TEXT_LIGHT)
+	draw_string(font, Vector2(545, 54), "%d%%" % int(cur_inst), HORIZONTAL_ALIGNMENT_LEFT, -1, 18, COLOR_TEXT_LIGHT)
 
 	# 7. Текущий этап ремонта
 	if stage:

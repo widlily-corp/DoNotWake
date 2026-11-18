@@ -19,6 +19,9 @@
 | Gemini Imagen (gemini-3.1-flash-image) | Блок-аут мастерской (`blockout_room`) | `docs/blockout_room.png` | Ресайз до 1280×720, выравнивание пропорций под сцену |
 | Gemini Imagen (gemini-3.1-flash-image) | Спрайт выключенного робота (`robot_calm`) | `assets/sprites/robot/robot_calm.png` | Удаление фона #FF00FF (bg_remover), дефрингинг контура, Nearest Neighbor ужимка до 256×320, карта нормалей |
 | Gemini Imagen (gemini-3.1-flash-image) | Спрайт пробуждённого робота (`robot_awake`) | `assets/sprites/robot/robot_awake.png` | Удаление фона #FF00FF (bg_remover), дефрингинг контура, Nearest Neighbor ужимка до 256×320, карта нормалей |
+| Gemini Imagen (gemini-3.1-flash-image) | Набор инструментов мастерской (`ui_tools`) | `assets/sprites/ui/tool_*.png` | Нарезка на 3 слота (ветошь, отвёртка, терминал), удаление фона #FF00FF, дефрингинг, квантование до 15 цветов, карты нормалей |
+| Gemini Imagen (gemini-3.1-flash-image) | Аналоговый манометр стабильности (`ui_gauge`) | `assets/sprites/ui/gauge_meter.png` | Удаление фона #FF00FF, кадрирование 128×128, квантование, карта нормалей |
+| Gemini Imagen (gemini-3.1-flash-image) | VHS-кассета и отсек привода (`ui_vhs_deck`) | `assets/sprites/ui/vhs_deck_prop.png` | Удаление фона #FF00FF, кадрирование 256×128, квантование, карта нормалей |
 
 ## Шрифты
 
