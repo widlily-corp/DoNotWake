@@ -18,3 +18,6 @@ desktop.ini
 __pycache__/
 *.pyc
 _tmp*
+
+# previews are not game assets
+docs/preview/*.import
