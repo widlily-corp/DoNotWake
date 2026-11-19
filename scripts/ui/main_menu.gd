@@ -4,9 +4,9 @@ extends Control
 ## Главное меню: ЭЛТ-монитор и VHS-привод (Do Not Wake)
 
 @onready var cassette: Control = $VHSDeck/Cassette
-@onready var tv_bezel: ColorRect = $TVBezel
+@onready var tv_bezel: TextureRect = $TVBezel
 @onready var crt_screen: ColorRect = $TVBezel/CRTScreen
-@onready var vhs_deck: ColorRect = $VHSDeck
+@onready var vhs_deck: TextureRect = $VHSDeck
 @onready var rec_dot: Label = $TVBezel/CRTScreen/VBoxTop/StatusBar/RecLabel
 @onready var timecode_lbl: Label = $TVBezel/CRTScreen/VBoxTop/StatusBar/TimecodeLabel
 @onready var title_lbl: Label = $TVBezel/CRTScreen/VBoxMenu/Title

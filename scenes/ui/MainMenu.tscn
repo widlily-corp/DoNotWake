@@ -1,9 +1,18 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
 [ext_resource type="Shader" path="res://shaders/crt_screen.gdshader" id="2_shader"]
 [ext_resource type="AudioStream" path="res://assets/sounds/click.wav" id="3_click"]
 [ext_resource type="AudioStream" path="res://assets/sounds/vhs_insert.wav" id="4_vhs"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu_bg.png" id="5_bg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ui_tv_bezel.png" id="6_bezel"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ui_crt_screen_bg.png" id="7_screen"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ui_vhs_deck_plate.png" id="8_deck"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ui_cassette.png" id="9_cassette"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ui_button_screen_normal.png" id="10_btn_n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ui_button_screen_hover.png" id="11_btn_h"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ui_button_screen_pressed.png" id="12_btn_p"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ui_button_screen_disabled.png" id="13_btn_d"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
 shader = ExtResource("2_shader")
@@ -13,17 +22,38 @@ shader_parameter/vignette_intensity = 0.4
 shader_parameter/curvature = 0.02
 shader_parameter/phosphor_tint = Color(0.88, 0.98, 0.94, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cassette"]
-bg_color = Color(0.22, 0.25, 0.28, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.42, 0.46, 0.52, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cassette"]
+texture = ExtResource("9_cassette")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_normal"]
+texture = ExtResource("10_btn_n")
+texture_margin_left = 18.0
+texture_margin_top = 16.0
+texture_margin_right = 18.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_hover"]
+texture = ExtResource("11_btn_h")
+texture_margin_left = 18.0
+texture_margin_top = 16.0
+texture_margin_right = 18.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_pressed"]
+texture = ExtResource("12_btn_p")
+texture_margin_left = 18.0
+texture_margin_top = 16.0
+texture_margin_right = 18.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_disabled"]
+texture = ExtResource("13_btn_d")
+texture_margin_left = 18.0
+texture_margin_top = 16.0
+texture_margin_right = 18.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -34,22 +64,29 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.03, 0.03, 0.04, 1)
+modulate = Color(0.5, 0.52, 0.56, 1)
+mouse_filter = 2
+texture = ExtResource("5_bg")
+expand_mode = 1
+stretch_mode = 0
 
-[node name="TVBezel" type="ColorRect" parent="."]
+[node name="TVBezel" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 32.0
 offset_right = 1168.0
 offset_bottom = 504.0
-color = Color(0.10, 0.12, 0.15, 1)
+mouse_filter = 2
+texture = ExtResource("6_bezel")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="CRTScreen" type="ColorRect" parent="TVBezel"]
 layout_mode = 0
@@ -57,7 +94,18 @@ offset_left = 48.0
 offset_top = 48.0
 offset_right = 1008.0
 offset_bottom = 428.0
-color = Color(0.05, 0.08, 0.09, 1)
+mouse_filter = 2
+color = Color(0.03, 0.04, 0.05, 1)
+
+[node name="ScreenArt" type="TextureRect" parent="TVBezel/CRTScreen"]
+layout_mode = 0
+offset_right = 960.0
+offset_bottom = 380.0
+mouse_filter = 2
+modulate = Color(0.55, 0.58, 0.62, 1)
+texture = ExtResource("7_screen")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="VBoxTop" type="VBoxContainer" parent="TVBezel/CRTScreen"]
 layout_mode = 1
@@ -75,7 +123,7 @@ layout_mode = 2
 [node name="RecLabel" type="Label" parent="TVBezel/CRTScreen/VBoxTop/StatusBar"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.15, 0.1, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 12
 text = "● REC"
 
 [node name="Spacer" type="Control" parent="TVBezel/CRTScreen/VBoxTop/StatusBar"]
@@ -85,7 +133,7 @@ size_flags_horizontal = 3
 [node name="TimecodeLabel" type="Label" parent="TVBezel/CRTScreen/VBoxTop/StatusBar"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 12
 text = "CH 03   SP   00:14:28:02"
 
 [node name="VBoxMenu" type="VBoxContainer" parent="TVBezel/CRTScreen"]
@@ -106,14 +154,14 @@ theme_override_constants/separation = 12
 [node name="Title" type="Label" parent="TVBezel/CRTScreen/VBoxMenu"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.93, 0.94, 0.96, 1)
-theme_override_font_sizes/font_size = 46
+theme_override_font_sizes/font_size = 32
 text = "DO NOT WAKE"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="TVBezel/CRTScreen/VBoxMenu"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 11
 text = "СИСТЕМА ДИАГНОСТИКИ И РЕМОНТА v0.3"
 horizontal_alignment = 1
 
@@ -123,44 +171,65 @@ layout_mode = 2
 [node name="BtnNewShift" type="Button" parent="TVBezel/CRTScreen/VBoxMenu"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
+focus_mode = 0
+theme_override_colors/font_color = Color(0.77, 0.80, 0.84, 1)
 theme_override_colors/font_hover_color = Color(0.93, 0.94, 0.96, 1)
-theme_override_font_sizes/font_size = 20
-text = "> НОВАЯ СМЕНА"
-flat = true
+theme_override_colors/font_pressed_color = Color(0.93, 0.94, 0.96, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_btn_disabled")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+text = "  НОВАЯ СМЕНА"
 
 [node name="BtnContinue" type="Button" parent="TVBezel/CRTScreen/VBoxMenu"]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-theme_override_colors/font_disabled_color = Color(0.25, 0.28, 0.32, 1)
-theme_override_font_sizes/font_size = 18
+focus_mode = 0
+theme_override_colors/font_disabled_color = Color(0.35, 0.40, 0.46, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_btn_disabled")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
 disabled = true
-text = "  ПРОДОЛЖИТЬ (НЕТ СОХРАНЕНИЙ)"
-flat = true
+text = "ПРОДОЛЖИТЬ (НЕТ СОХРАНЕНИЙ)"
 
 [node name="BtnQuit" type="Button" parent="TVBezel/CRTScreen/VBoxMenu"]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
-theme_override_colors/font_hover_color = Color(0.9, 0.25, 0.2, 1)
-theme_override_font_sizes/font_size = 18
+focus_mode = 0
+theme_override_colors/font_color = Color(0.77, 0.80, 0.84, 1)
+theme_override_colors/font_hover_color = Color(0.9, 0.16, 0.1, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_btn_disabled")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
 text = "  ВЫХОД"
-flat = true
 
-[node name="VHSDeck" type="ColorRect" parent="."]
+[node name="VHSDeck" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 220.0
 offset_top = 524.0
 offset_right = 1060.0
 offset_bottom = 680.0
-color = Color(0.14, 0.16, 0.19, 1)
+mouse_filter = 2
+texture = ExtResource("8_deck")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="SlotBacking" type="ColorRect" parent="VHSDeck"]
+visible = false
 layout_mode = 0
 offset_left = 172.0
 offset_top = 16.0
 offset_right = 668.0
 offset_bottom = 112.0
+mouse_filter = 2
 color = Color(0.06, 0.07, 0.08, 1)
 
 [node name="Cassette" type="Button" parent="VHSDeck"]
@@ -169,14 +238,21 @@ offset_left = 172.0
 offset_top = 16.0
 offset_right = 668.0
 offset_bottom = 112.0
-theme_override_colors/font_color = Color(0.82, 0.84, 0.86, 1)
+focus_mode = 0
+theme_override_colors/font_color = Color(0.93, 0.94, 0.96, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxFlat_cassette")
-text = "[ VHS: DO NOT WAKE // СМЕНА 01 ]
-КЛИКНИТЕ, ЧТОБЫ ВСТАВИТЬ КАССЕТУ И НАЧАТЬ"
+theme_override_colors/font_pressed_color = Color(0.85, 0.88, 0.92, 1)
+theme_override_colors/font_outline_color = Color(0.04, 0.05, 0.06, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxTexture_cassette")
+theme_override_styles/hover = SubResource("StyleBoxTexture_cassette")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_cassette")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+text = "DO NOT WAKE  //  СМЕНА 01"
 
 [node name="PlayIndicator" type="Label" parent="VHSDeck"]
+visible = false
 layout_mode = 0
 offset_left = 720.0
 offset_top = 48.0
@@ -193,8 +269,19 @@ offset_top = 64.0
 offset_right = 150.0
 offset_bottom = 90.0
 theme_override_colors/font_color = Color(0.35, 0.38, 0.42, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 9
 text = "EVILBYTE D-900"
+
+[node name="CassetteHint" type="Label" parent="."]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 686.0
+offset_right = 1060.0
+offset_bottom = 706.0
+theme_override_colors/font_color = Color(0.42, 0.48, 0.52, 1)
+theme_override_font_sizes/font_size = 9
+text = "ЛКМ — ВСТАВИТЬ КАССЕТУ И НАЧАТЬ СМЕНУ"
+horizontal_alignment = 1
 
 [node name="CRTPostProcess" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_crt")
