@@ -50,14 +50,33 @@ func get_int(key: String, fallback: int = 0) -> int:
 
 
 func get_stages() -> Array:
-	var st: Variant = data.get("stages", [])
-	if st is Array:
-		return st
-	return []
+	return _dict_list("stages", "zones")
 
 
 func get_tools() -> Array:
-	var tl: Variant = data.get("tools", [])
-	if tl is Array:
-		return tl
-	return []
+	return _dict_list("tools", "id")
+
+
+## Возвращает только корректные записи-словари с обязательным ключом; мусор пропускается с предупреждением.
+func _dict_list(key: String, required_key: String) -> Array:
+	var raw: Variant = data.get(key, [])
+	var out: Array = []
+	if not raw is Array:
+		push_warning("Balance: '%s' must be an array" % key)
+		return out
+	for item in raw:
+		if item is Dictionary and (item as Dictionary).has(required_key):
+			out.append(item)
+		else:
+			push_warning("Balance: skipped invalid entry in '%s': %s" % [key, str(item)])
+	return out
+
+
+## Преобразует [x, y, w, h] или Rect2 в Rect2. Некорректное значение -> пустой Rect2.
+static func to_rect(raw: Variant) -> Rect2:
+	if raw is Rect2:
+		return raw
+	if raw is Array and (raw as Array).size() == 4:
+		var a := raw as Array
+		return Rect2(float(a[0]), float(a[1]), float(a[2]), float(a[3]))
+	return Rect2()

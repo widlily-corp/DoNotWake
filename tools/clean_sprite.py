@@ -58,7 +58,8 @@ def quantize(img, colors):
     flat = []
     for c in colors:
         flat.extend(c)
-    flat.extend([0, 0, 0] * (256 - len(colors)))
+    # Fill remaining entries with the first palette color (obsidian) to prevent mapping to (0, 0, 0)
+    flat.extend(list(colors[0]) * (256 - len(colors)))
     palette.putpalette(flat)
 
     rgb = img.convert("RGB").quantize(palette=palette, dither=Image.Dither.NONE).convert("RGB")

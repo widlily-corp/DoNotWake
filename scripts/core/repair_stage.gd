@@ -29,11 +29,13 @@ static func from_dict(d: Dictionary, p_reward: float = 8.0, p_penalty: float = 1
 	var raw_zones: Variant = d.get("zones", [])
 	if raw_zones is Array:
 		for z in raw_zones:
-			if z is Dictionary:
+			if z is Dictionary and Balance.to_rect(z.get("rect")).has_area():
 				var z_copy: Dictionary = (z as Dictionary).duplicate(true)
-				if not z_copy.has("done"):
-					z_copy["done"] = false
+				z_copy["rect"] = Balance.to_rect(z_copy["rect"])
+				z_copy["done"] = false
 				stage.zones.append(z_copy)
+			else:
+				push_warning("RepairStage '%s': skipped invalid zone %s" % [stage.id, str(z)])
 
 	return stage
 
@@ -59,13 +61,14 @@ func try_repair(zone_index: int, selected_tool_id: String) -> Dictionary:
 		return {
 			"success": true,
 			"already_done": false,
-			"message": "Успешно: " + str(z.get("label", "Узел")),
+			"message": "Починено: " + str(z.get("label", "Узел")),
 			"delta_instability": -reward
 		}
 	else:
 		return {
 			"success": false,
 			"already_done": false,
-			"message": "Не тот инструмент! Требуется: " + required_tool,
+			"required_tool": required_tool,
+			"message": "Не тот инструмент!",
 			"delta_instability": penalty
 		}

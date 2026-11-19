@@ -27,6 +27,10 @@ var message_is_alert: bool = false
 var flash_timer: float = 0.0
 var screen_shake: float = 0.0
 
+# 2.5D-глубина: риг смещений слоёв от мыши (data/parallax.json)
+var parallax: ParallaxRig
+var _window_focused: bool = true
+
 # Палитра
 const COLOR_BG: Color = Color(0.03, 0.03, 0.04)
 const COLOR_BENCH: Color = Color(0.22, 0.24, 0.27)
@@ -39,6 +43,7 @@ const COLOR_SUCCESS: Color = Color(0.35, 0.92, 0.58)
 var tools: Array = []
 
 func _ready() -> void:
+	parallax = ParallaxRig.new()
 	tex_robot_calm = load("res://assets/sprites/robot/robot_calm.png")
 	tex_robot_awake = load("res://assets/sprites/robot/robot_awake.png")
 	if ResourceLoader.exists("res://docs/blockout_room.png"):
@@ -99,10 +104,32 @@ func _process(delta: float) -> void:
 	if screen_shake > 0.0:
 		screen_shake = maxf(screen_shake - delta * 20.0, 0.0)
 
+	if parallax:
+		if _window_focused:
+			parallax.update(delta, get_global_mouse_position(), get_viewport_rect().size)
+		else:
+			parallax.reset()
+
 	if game_state:
 		game_state.tick(delta)
 
 	queue_redraw()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		_window_focused = false
+		if parallax:
+			parallax.reset()
+	elif what == NOTIFICATION_WM_WINDOW_FOCUS_IN or what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		_window_focused = true
+
+
+## Смещение именованного слоя (без тряски): один источник правды для _draw и кликов.
+func _layer_shift(layer_name: String) -> Vector2:
+	if parallax == null:
+		return Vector2.ZERO
+	return parallax.offset_for_layer(layer_name)
 
 
 func _input(event: InputEvent) -> void:
@@ -125,7 +152,9 @@ func _handle_click(pos: Vector2) -> void:
 	if game_state.current_state == GameState.State.AWAKE:
 		return
 
-	# Клик по тулбару
+	# Клик по тулбару: тулбар нарисован со смещением near — компенсируем его.
+	var near_shift := _layer_shift("near")
+	var tool_pos := pos - near_shift
 	for t in tools:
 		var raw_rect: Variant = t.get("rect", null)
 		if raw_rect is Rect2 or (raw_rect is Array and (raw_rect as Array).size() == 4):
@@ -136,7 +165,7 @@ func _handle_click(pos: Vector2) -> void:
 				var arr := raw_rect as Array
 				r = Rect2(float(arr[0]), float(arr[1]), float(arr[2]), float(arr[3]))
 
-			if r.has_point(pos):
+			if r.has_point(tool_pos):
 				selected_tool = str(t.get("id", ""))
 				message_text = "Выбран инструмент: " + str(t.get("label", ""))
 				message_is_alert = false
@@ -144,7 +173,9 @@ func _handle_click(pos: Vector2) -> void:
 					sfx_click.play()
 				return
 
-	# Клик по активным зонам текущего этапа
+	# Клик по активным зонам текущего этапа: они нарисованы со смещением mid.
+	var mid_shift := _layer_shift("mid")
+	var zone_pos := pos - mid_shift
 	var stage: RepairStage = game_state.get_current_stage()
 	if stage:
 		for i in range(stage.zones.size()):
@@ -158,7 +189,7 @@ func _handle_click(pos: Vector2) -> void:
 					var arr := raw_rect as Array
 					r = Rect2(float(arr[0]), float(arr[1]), float(arr[2]), float(arr[3]))
 
-				if r.has_point(pos):
+				if r.has_point(zone_pos):
 					game_state.apply_repair(i, selected_tool)
 					return
 
@@ -168,18 +199,22 @@ func _draw() -> void:
 	if screen_shake > 0.0:
 		shake_offset = Vector2(randf_range(-screen_shake, screen_shake), randf_range(-screen_shake, screen_shake))
 
-	# 1. Задний фон комнаты
+	# Смещения слоёв: параллакс (2.5D) + тряска поверх для фона/робота/зон.
+	var far_shift := _layer_shift("far") + shake_offset
+	var mid_shift := _layer_shift("mid")
+	var near_shift := _layer_shift("near")
+
+	# 1. Задний фон комнаты (подложка закрывает край при смещении far)
+	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), COLOR_BG)
 	if tex_room_blockout:
-		draw_texture_rect(tex_room_blockout, Rect2(shake_offset, Vector2(1280, 720)), false, Color(0.55, 0.58, 0.62))
-	else:
-		draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), COLOR_BG)
+		draw_texture_rect(tex_room_blockout, Rect2(far_shift, Vector2(1280, 720)), false, Color(0.55, 0.58, 0.62))
 
 	# 2. Верстак (нижняя плоскость)
-	draw_rect(Rect2(Vector2(0, 560), Vector2(1280, 160)), Color(0.09, 0.10, 0.12))
-	draw_line(Vector2(0, 560), Vector2(1280, 560), COLOR_BENCH_EDGE, 2.0)
+	draw_rect(Rect2(Vector2(0, 560) + mid_shift, Vector2(1280, 160)), Color(0.09, 0.10, 0.12))
+	draw_line(Vector2(0, 560) + mid_shift, Vector2(1280, 560) + mid_shift, COLOR_BENCH_EDGE, 2.0)
 
 	# 3. Отрисовка робота (спрайты)
-	var robot_rect := Rect2(Vector2(530, 180) + shake_offset, Vector2(300, 375))
+	var robot_rect := Rect2(Vector2(530, 180) + mid_shift + shake_offset, Vector2(300, 375))
 	var is_awake := (game_state and game_state.current_state == GameState.State.AWAKE)
 	var current_tex := tex_robot_awake if is_awake else tex_robot_calm
 
@@ -202,7 +237,7 @@ func _draw() -> void:
 				else:
 					var arr := raw_rect as Array
 					r = Rect2(float(arr[0]), float(arr[1]), float(arr[2]), float(arr[3]))
-				r.position += shake_offset
+				r.position += mid_shift + shake_offset
 
 				var is_done: bool = bool(z.get("done", false))
 				var z_color := COLOR_SUCCESS if is_done else Color(0.45, 0.75, 0.95, 0.7)
@@ -220,6 +255,7 @@ func _draw() -> void:
 				var arr := raw_rect as Array
 				r = Rect2(float(arr[0]), float(arr[1]), float(arr[2]), float(arr[3]))
 
+			r.position += near_shift
 			var t_id := str(t.get("id", ""))
 			var is_selected: bool = (selected_tool == t_id)
 			var fill_color := Color(0.20, 0.28, 0.35) if is_selected else Color(0.12, 0.14, 0.17)

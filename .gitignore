@@ -13,3 +13,8 @@ dist/
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# python
+__pycache__/
+*.pyc
+_tmp*

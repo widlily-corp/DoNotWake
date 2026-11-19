@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "base_amplitude_px": 4.0,
+  "global_multiplier": 1.0,
+  "smoothing": 9.0,
+  "max_offset_px": 5.0,
+  "deadzone": 0.06,
+  "layers": {
+    "far": { "depth": 1.0 },
+    "mid": { "depth": 0.45 },
+    "near": { "depth": 0.15 },
+    "ui": { "depth": 0.0 },
+    "menu_bezel": { "depth": 0.4, "amplitude_px": 6.0 },
+    "menu_screen": { "depth": 0.8, "amplitude_px": 6.0 },
+    "menu_deck": { "depth": 0.5, "amplitude_px": 6.0 }
+  }
+}

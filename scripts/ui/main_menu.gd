@@ -4,6 +4,9 @@ extends Control
 ## Главное меню: ЭЛТ-монитор и VHS-привод (Do Not Wake)
 
 @onready var cassette: Control = $VHSDeck/Cassette
+@onready var tv_bezel: ColorRect = $TVBezel
+@onready var crt_screen: ColorRect = $TVBezel/CRTScreen
+@onready var vhs_deck: ColorRect = $VHSDeck
 @onready var rec_dot: Label = $TVBezel/CRTScreen/VBoxTop/StatusBar/RecLabel
 @onready var timecode_lbl: Label = $TVBezel/CRTScreen/VBoxTop/StatusBar/TimecodeLabel
 @onready var title_lbl: Label = $TVBezel/CRTScreen/VBoxMenu/Title
@@ -16,10 +19,22 @@ var rec_timer: float = 0.0
 var title_drift_timer: float = 0.0
 var original_title_pos: Vector2 = Vector2.ZERO
 
+# 2.5D-глубина: корпус ТВ и VHS-привод живут на разных слоях (data/parallax.json)
+var parallax: ParallaxRig
+var _base_positions: Dictionary = {}
+var _window_focused: bool = true
+
 
 func _ready() -> void:
 	if title_lbl:
 		original_title_pos = title_lbl.position
+	parallax = ParallaxRig.new()
+	_base_positions = {
+		"bezel": tv_bezel.position,
+		"screen": crt_screen.position,
+		"deck": vhs_deck.position,
+	}
+	_apply_parallax()
 	update_timecode_string()
 
 
@@ -39,6 +54,40 @@ func _process(delta: float) -> void:
 		if title_drift_timer > 3.65:
 			title_lbl.position.x = original_title_pos.x
 			title_drift_timer = 0.0
+
+	_update_parallax(delta)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		_window_focused = false
+		if parallax:
+			parallax.reset()
+			_apply_parallax()
+	elif what == NOTIFICATION_WM_WINDOW_FOCUS_IN or what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		_window_focused = true
+
+
+func _update_parallax(delta: float) -> void:
+	if parallax == null:
+		return
+	if _window_focused:
+		parallax.update(delta, get_global_mouse_position(), get_viewport_rect().size)
+	else:
+		parallax.reset()
+	_apply_parallax()
+
+
+## Корпус двигается на своей глубине, экран — на своей поверх корпуса.
+func _apply_parallax() -> void:
+	if parallax == null or _base_positions.is_empty():
+		return
+	var bezel_shift := parallax.offset_for_layer("menu_bezel")
+	var screen_shift := parallax.offset_for_layer("menu_screen")
+	var deck_shift := parallax.offset_for_layer("menu_deck")
+	tv_bezel.position = (_base_positions["bezel"] as Vector2) + bezel_shift
+	crt_screen.position = (_base_positions["screen"] as Vector2) + (screen_shift - bezel_shift)
+	vhs_deck.position = (_base_positions["deck"] as Vector2) + deck_shift
 
 
 func update_timecode_string() -> void:
