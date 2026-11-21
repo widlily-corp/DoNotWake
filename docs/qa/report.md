@@ -135,3 +135,23 @@
 - `tools/run_all_tests.ps1` — обновлён и подтверждает успешное прохождение 16 из 17 тестов.
 - `docs/qa/report.md` — обновлён со всеми протоколами этапа 4.
 - Контракты данных, сигналов и переходов полностью соблюдены.
+
+---
+
+## 5. Контрольный прогон 21.11.2026, 22:26 (после сдачи блока «Геймдизайн»)
+
+Команда: `powershell -File tools/run_all_tests.ps1`, движок 4.7.2.stable.official, headless.
+
+| Показатель | Значение |
+|---|---|
+| Файлов тестов | 21 |
+| PASS | 20 |
+| FAIL | 1 |
+| Время | 7.56 с |
+
+Провал — `tests/test_robot_interactivity.gd`, 6 из 61 проверки: близость височного порта (`proximity_entered` / `proximity_exited`, определение активной зоны, щелчок шагового двигателя), `RobotThermalFX: heat_ratio > 0.5` (фактически 0.49 при нестабильности 66%) и всплеск перегрева `> 0.8` (фактически 0.56). Это тот же известный baseline, что и в §3: пороги нагрева и proximity не дотягивают до целевых значений, регресса нет.
+
+Новое по сравнению с этап 4: в наборе появились `test_card_file.gd`, `test_playability.gd`, `test_proximity_awareness.gd`, `test_audio_credits.gd` — все PASS.
+
+Зелёными остаются ключевые для блоков 03–04 наборы: `test_loop_integration` (160 проверок), `test_session` (114), `test_ui_intents` (69), `test_tactile_mechanics` (63), `test_steps` (58), `test_data_integrity` (33).
+

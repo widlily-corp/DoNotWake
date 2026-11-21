@@ -21,3 +21,4 @@ _tmp*
 
 # previews are not game assets
 docs/preview/*.import
+
