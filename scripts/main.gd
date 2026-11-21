@@ -1438,9 +1438,9 @@ func _draw() -> void:
 		var p_title := _get_phase_title(game_state.current_phase)
 		var p_instr := _get_phase_instruction(game_state.current_phase)
 		draw_string(font, Vector2(750, 44), p_title, HORIZONTAL_ALIGNMENT_LEFT, 450.0, 12, COLOR_TEXT_LIGHT)
-		draw_multiline_string(font, Vector2(750, 60), p_instr, HORIZONTAL_ALIGNMENT_LEFT, 450.0, 10, 2, COLOR_TEXT_PALE)
-		if not _is_any_modal_open() and (game_state.current_phase == GameState.Phase.DIAGNOSTICS or game_state.current_phase == GameState.Phase.DOC_SEARCH):
-			var tab_pulse := 0.6 + 0.4 * sin(anim_time * 6.0)
+		draw_multiline_string(font, Vector2(750, 60), p_instr, HORIZONTAL_ALIGNMENT_LEFT, 450.0, 10, 2, COLOR_TEXT_DIM)
+		if not _is_overlay_active() and (game_state.current_phase == GameState.Phase.DIAGNOSTICS or game_state.current_phase == GameState.Phase.DOC_SEARCH):
+			var tab_pulse := 0.6 + 0.4 * sin(Time.get_ticks_msec() / 180.0)
 			draw_string(font, Vector2(750, 86), "▶ НАЖМИТЕ [TAB], ЧТОБЫ ОТКРЫТЬ ЭКРАН", HORIZONTAL_ALIGNMENT_LEFT, 450.0, 10, Color(0.95, 0.85, 0.40, tab_pulse))
 	else:
 		var stage: RepairStage = game_state.get_current_stage() if game_state else null
