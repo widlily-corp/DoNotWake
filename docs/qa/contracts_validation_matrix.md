@@ -1,8 +1,8 @@
 # Матрица валидации контрактов данных (Do Not Wake)
 
-## Спецификация: `docs/architecture.md` §3.1–§3.5, `docs/qa/report.md` §3, §5
+## Спецификация: контракты данных и переходов, проверки QA
 
-| № | Объект / Область | Правило проверки | Реализация в `tests/test_data_integrity.gd` | Статус этап 1 |
+| № | Объект / Область | Правило проверки | Реализация в `tests/test_data_integrity.gd` | Статус этапа 1 |
 |---|---|---|---|---|
 | 1 | `data/robot.json` | Файл существует и парсится в Dictionary | `FileAccess.file_exists` + `JSON.parse_string` | PASS |
 | 2 | `data/robot.json` | `threshold` > 0 | `r_dict.has("threshold") and val > 0.0` | PASS |
@@ -52,7 +52,7 @@
 
 ## Реестр лицензий аудио (`data/audio_credits.json` / `tests/test_audio_credits.gd`)
 
-| № | Проверка | Описание | Статус этап 1 |
+| № | Проверка | Описание | Статус этапа 1 |
 |---|---|---|---|
 | A1 | `data/audio_credits.json` | Файл существует и парсится в Dictionary | Ожидает AUD (FAIL на живом файле) |
 | A2 | `tracks` array | Массив не пустой, содержит список треков | Реализовано в валидаторе |

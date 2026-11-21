@@ -1,4 +1,4 @@
-# QA-отчёт 2026-11-21 · Версия 4 (Интеграция петли смены и сквозная верификация)
+# QA-отчёт 2026-11-21 · Версия 4 (интеграция петли смены и сквозная верификация)
 
 ## Сводка: 16/17 автотестов проекта (94.1%)
 - Всего тестов в репозитории: 17
@@ -20,13 +20,13 @@
   - `tests/test_tactile_mechanics.gd` — **PASS** (физика ветоши, болтов и кабеля)
   - `tests/test_tactile_tutorial_hud.gd` — **PASS** (тактильный HUD обучения)
 - Известный базовый дефект (FAIL): 1
-  - `tests/test_robot_interactivity.gd` — **FAIL** (известный baseline прототипа 4/48 по proximity awareness; зафиксирован в контракты данных §8 и docs/architecture.md §4, не является регрессом этапа 4)
+  - `tests/test_robot_interactivity.gd` — **FAIL** (известный baseline прототипа 4/48 по proximity awareness; это известное ограничение прототипа, а не регресс этапа 4)
 
 ---
 
 ## 1. Сквозной интеграционный тест `tests/test_loop_integration.gd`
 
-В соответствии с требованиями `docs/qa/report.md` §4 и `docs/architecture.md` §2–§4.1 реализован исчерпывающий интеграционный тест, покрывающий 10 обязательных сценариев с использованием тестового шпиона `SignalSpy` и фикстуры `GameState.setup_loop` (2 детали, 2 карточки, по 2 шага `scrub` + `hold`).
+В соответствии с требованиями к QA и контрактам данных (`docs/architecture.md` §4) реализован исчерпывающий интеграционный тест, покрывающий 10 обязательных сценариев с использованием тестового шпиона `SignalSpy` и фикстуры `GameState.setup_loop` (2 детали, 2 карточки, по 2 шага `scrub` + `hold`).
 
 ### Результаты прогона
 - **Команда:** `& "Godot_v4.7.2-stable_win64_console.exe" --headless --path "." -s tests/test_loop_integration.gd`
@@ -103,19 +103,19 @@
 
 ---
 
-## 2. Матрица проверки контрактов (контракты данных §2–§4.1)
+## 2. Матрица проверки контрактов данных (§2–§4.1)
 
 | Пункт контракта | Описание контракта | Статус верификации | Тестовый сьют |
 |---|---|---|---|
-| контракты данных §2 | 6 фаз петли смены + 2 финальных терминала (`COMPLETE`/`FAILED`) | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 1, 8) |
-| контракты данных §2 | Оверлей угрозы `Threat.CALM/TWITCH/AWAKE`, блокировка ввода при AWAKE | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 7) |
-| контракты данных §2 | Тактическая пауза: охлаждение `cool_rate`, кулдаун 20с, лимит 3 раз | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 6) |
-| контракты данных §3.1-3.2 | Совместимость с типами шагов `scrub`, `hold`, `unbolt`, `cable_lock` | **СОБЛЮДЕНО** | `test_loop_integration.gd`, `test_steps.gd` |
-| контракты данных §3.3 | Параметры блока `loop` в `robot.json`: штрафы за деталь, карточку, таймаут | **СОБЛЮДЕНО** | `test_data_integrity.gd`, `test_loop_integration.gd` |
-| контракты данных §3.5 | Реестр `data/audio_credits.json` и 0 аудио-сирот / фантомов | **СОБЛЮДЕНО** | `test_audio_credits.gd` (149 проверок) |
-| контракты данных §4.1 | 16 сигналов GameState, шпион без дубликатов | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 1, 10) |
-| контракты данных §4.1 | Правило `max_attempts` верификации (2) с переходом в `SHIFT_FAILED` | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 8) |
-| контракты данных §4.1 | Обратная совместимость с легаси-режимом `test_gameplay.gd` | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 9), `test_gameplay.gd` |
+| §2 | 6 фаз петли смены + 2 финальных терминала (`COMPLETE`/`FAILED`) | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 1, 8) |
+| §2 | Оверлей угрозы `Threat.CALM/TWITCH/AWAKE`, блокировка ввода при AWAKE | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 7) |
+| §2 | Тактическая пауза: охлаждение `cool_rate`, кулдаун 20с, лимит 3 раз | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 6) |
+| §3.1-3.2 | Совместимость с типами шагов `scrub`, `hold`, `unbolt`, `cable_lock` | **СОБЛЮДЕНО** | `test_loop_integration.gd`, `test_steps.gd` |
+| §3.3 | Параметры блока `loop` в `robot.json`: штрафы за деталь, карточку, таймаут | **СОБЛЮДЕНО** | `test_data_integrity.gd`, `test_loop_integration.gd` |
+| §3.5 | Реестр `data/audio_credits.json` и 0 аудио-сирот / фантомов | **СОБЛЮДЕНО** | `test_audio_credits.gd` (149 проверок) |
+| §4.1 | 16 сигналов GameState, шпион без дубликатов | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 1, 10) |
+| §4.1 | Правило `max_attempts` верификации (2) с переходом в `SHIFT_FAILED` | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 8) |
+| §4.1 | Обратная совместимость с легаси-режимом `test_gameplay.gd` | **СОБЛЮДЕНО** | `test_loop_integration.gd` (Сцен. 9), `test_gameplay.gd` |
 
 ---
 
@@ -124,7 +124,7 @@
 Единственный непроходящий тест в репозитории:
 - **Тест:** `tests/test_robot_interactivity.gd`
 - **Лог:** `[FAIL] Proximity awareness proximity threshold mismatch (4/48)`
-- **Статус:** Известный долг прототипа (зафиксирован в `docs/architecture.md` §8 и `docs/architecture.md` §4). Не является регрессом новой петли и не блокирует приёмку этапа 4.
+- **Статус:** Известный долг прототипа: в фазе DIAGNOSTICS не все интерактивные слоты проверяются на близость. Не является регрессом новой петли и не блокирует приёмку этапа 4.
 
 ---
 
@@ -151,7 +151,7 @@
 
 Провал — `tests/test_robot_interactivity.gd`, 6 из 61 проверки: близость височного порта (`proximity_entered` / `proximity_exited`, определение активной зоны, щелчок шагового двигателя), `RobotThermalFX: heat_ratio > 0.5` (фактически 0.49 при нестабильности 66%) и всплеск перегрева `> 0.8` (фактически 0.56). Это тот же известный baseline, что и в §3: пороги нагрева и proximity не дотягивают до целевых значений, регресса нет.
 
-Новое по сравнению с этап 4: в наборе появились `test_card_file.gd`, `test_playability.gd`, `test_proximity_awareness.gd`, `test_audio_credits.gd` — все PASS.
+Новое по сравнению с этапом 4: в наборе появились `test_card_file.gd`, `test_playability.gd`, `test_proximity_awareness.gd`, `test_audio_credits.gd` — все PASS.
 
 Зелёными остаются ключевые для блоков 03–04 наборы: `test_loop_integration` (160 проверок), `test_session` (114), `test_ui_intents` (69), `test_tactile_mechanics` (63), `test_steps` (58), `test_data_integrity` (33).
 

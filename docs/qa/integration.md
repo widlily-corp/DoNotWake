@@ -1,8 +1,8 @@
-# Отчёт интеграции сцены Main.tscn (этап 3, P0)
+# Отчёт интеграции сцены Main.tscn (этап 3)
 
 ## 1. Обзор и цели интеграции
 
-В рамках этапа 3 (Интеграция) выполнена сквозная сборка и координация ключевых игровых подсистем ремонта робота:
+В рамках этапа 3 (интеграция) выполнена сквозная сборка и координация ключевых игровых подсистем ремонта робота:
 - **`GameState`** (`scripts/core/game_state.gd`): авторитетный контроллер 6-фазной петли смены и состояний автоматона.
 - **`StepRunner`** (`scripts/core/step_runner.gd`): универсальный исполнитель тактильных операций ремонта (scrub, unbolt, cable_lock, hold, calibrate).
 - **`LoopScreens`** (`scripts/ui/loop_screens.gd`): координатор экранных оверлеев и модальных окон (CanvasLayer 15..60).
@@ -164,7 +164,7 @@ func get_component(kind: String) -> Node2D:
 | `test_loop_audio.gd` | **PASS** | 0.48s | 21 звуковое событие и кроссфейд музыки |
 | `test_procedural_audio.gd` | **PASS** | 0.40s | Процедурный синтез аудио |
 | `test_proximity_awareness.gd` | **PASS** | 0.30s | Реакция автоматона на мышь |
-| `test_robot_interactivity.gd` | *FAIL* | 0.75s | *Known baseline (контракт данных §8)* |
+| `test_robot_interactivity.gd` | *FAIL* | 0.75s | *известное ограничение прототипа* |
 | `test_robot_optics.gd` | **PASS** | 0.29s | Оптика и свечение сенсоров |
 | `test_robot_procedural_animation.gd` | **PASS** | 0.20s | Дыхание и тремор автоматона |
 | `test_robot_thermal_fx.gd` | **PASS** | 0.30s | Тепловые эффекты и пар |
