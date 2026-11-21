@@ -217,6 +217,7 @@ func start_shift() -> void:
 		_cards = doc_data.get("cards", [])
 		_drawers = doc_data.get("drawers", [])
 
+	_diagnostics_report.clear()
 	_set_phase(Phase.DIAGNOSTICS)
 	threat_changed.emit(current_threat, robot.instability if robot != null else 0.0)
 
@@ -258,14 +259,16 @@ func get_diagnostics_report() -> Dictionary:
 
 ## Выбор узла/детали на роботе
 func select_part(part_id: String) -> bool:
-	if current_phase != Phase.PART_SELECT or current_threat == Threat.AWAKE or is_paused:
+	if (current_phase != Phase.PART_SELECT and current_phase != Phase.DIAGNOSTICS) or current_threat == Threat.AWAKE or is_paused:
 		return false
 
 	var found_part: Dictionary = {}
 	for p in _parts:
-		if p is Dictionary and str(p.get("id", "")) == part_id:
-			if not _verified_part_ids.has(part_id):
+		if p is Dictionary and (str(p.get("id", "")) == part_id or str(p.get("tag", "")) == part_id):
+			var pid: String = str(p.get("id", ""))
+			if not _verified_part_ids.has(pid):
 				found_part = p
+				part_id = pid
 				break
 
 	if found_part.is_empty():
@@ -538,6 +541,7 @@ func run_verification() -> bool:
 				remaining += 1
 
 		if remaining > 0:
+			_diagnostics_report.clear()
 			_set_phase(Phase.DIAGNOSTICS)
 		else:
 			_set_phase(Phase.SHIFT_COMPLETE)
@@ -583,6 +587,7 @@ func run_verification() -> bool:
 			abort_shift("Превышен лимит попыток верификации (%d)" % max_att)
 			return false
 		else:
+			_diagnostics_report.clear()
 			_set_phase(Phase.DIAGNOSTICS)
 			return false
 

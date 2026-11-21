@@ -670,7 +670,7 @@ func _get_phase_instruction(phase: int) -> String:
 		GameState.Phase.DIAGNOSTICS:
 			return "Нажмите СКАНИРОВАТЬ на терминале. TAB — открыть терминал снова"
 		GameState.Phase.PART_SELECT:
-			return "Кликните по бирке детали на корпусе робота (например A-04)"
+			return "Кликните [ВЫБРАТЬ] в терминале или бирку на роботе (например [A-04])"
 		GameState.Phase.DOC_SEARCH:
 			return "Откройте ящик картотеки и нажмите ВЗЯТЬ у нужной карточки. TAB — картотека"
 		GameState.Phase.REPAIR:
@@ -853,7 +853,15 @@ func _on_tool_drag_started(tool_id: String) -> void:
 	selected_tool = tool_id
 	held_tool = new_tool
 	if game_state and game_state.current_mode == GameState.Mode.NEW and game_state.current_phase != GameState.Phase.REPAIR:
-		message_text = "В руке: %s · Ремонт ещё не начат! Нажмите TAB, чтобы открыть терминал" % (held_tool.label.to_upper() if held_tool and held_tool.label != "" else tool_id.to_upper())
+		var tool_name := (held_tool.label.to_upper() if held_tool and held_tool.label != "" else tool_id.to_upper())
+		var phase_hint := "Сначала выберите деталь!"
+		if game_state.current_phase == GameState.Phase.DIAGNOSTICS:
+			phase_hint = "Сначала запустите сканирование на терминале (TAB)!"
+		elif game_state.current_phase == GameState.Phase.PART_SELECT:
+			phase_hint = "Сначала выберите деталь (бирка на роботе или TAB)!"
+		elif game_state.current_phase == GameState.Phase.DOC_SEARCH:
+			phase_hint = "Сначала изучите картотеку и начните ремонт в терминале (TAB)!"
+		message_text = "В руке: %s · %s" % [tool_name, phase_hint]
 		message_is_alert = true
 	elif held_tool and held_tool.label != "":
 		message_text = "В руке: %s · ЛКМ по лотку или ПКМ — убрать" % held_tool.label.to_upper()

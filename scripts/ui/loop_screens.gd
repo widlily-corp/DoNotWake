@@ -112,6 +112,8 @@ func _connect_panel_signals() -> void:
 		diagnostics_panel.scan_requested.connect(_on_panel_scan_requested)
 	if diagnostics_panel != null and not diagnostics_panel.closed.is_connected(_on_panel_closed):
 		diagnostics_panel.closed.connect(_on_panel_closed)
+	if diagnostics_panel != null and not diagnostics_panel.part_selected.is_connected(_on_panel_part_clicked):
+		diagnostics_panel.part_selected.connect(_on_panel_part_clicked)
 
 	if part_markers != null and not part_markers.part_clicked.is_connected(_on_panel_part_clicked):
 		part_markers.part_clicked.connect(_on_panel_part_clicked)
@@ -193,6 +195,8 @@ func _on_phase_changed(phase: int) -> void:
 			var rep: Dictionary = {}
 			if _game_state != null and _game_state.has_method("get_diagnostics_report"):
 				rep = _game_state.get_diagnostics_report()
+			if rep.is_empty():
+				_last_diagnostics_report.clear()
 			elif not _last_diagnostics_report.is_empty():
 				rep = _last_diagnostics_report
 			_open_modal(diagnostics_panel, [rep])
@@ -326,10 +330,12 @@ func _on_verification_finished(passed: bool, details: Dictionary) -> void:
 ## Заново открыть панель текущей фазы (TAB), чтобы закрытая панель не тупила петлю.
 func reopen_phase_panel() -> void:
 	match _current_phase:
-		Phase.DIAGNOSTICS:
+		Phase.DIAGNOSTICS, Phase.PART_SELECT:
 			var rep: Dictionary = {}
 			if _game_state != null and _game_state.has_method("get_diagnostics_report"):
 				rep = _game_state.get_diagnostics_report()
+			elif not _last_diagnostics_report.is_empty():
+				rep = _last_diagnostics_report
 			_open_modal(diagnostics_panel, [rep])
 		Phase.DOC_SEARCH:
 			var idx: Variant = null

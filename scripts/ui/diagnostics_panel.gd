@@ -5,6 +5,7 @@ extends CanvasLayer
 ## Отображает протокол неисправностей, коды (E-217) и симптомы
 
 signal scan_requested
+signal part_selected(part_id: String)
 signal closed
 
 const PALETTE_GUNMETAL := Color("#1A2028")
@@ -26,6 +27,7 @@ const PANEL_RECT := Rect2(160, 150, 960, 420)
 @onready var results_box: VBoxContainer = $Panel/ResultsScroll/ResultsBox
 @onready var count_label: Label = $Panel/CountLabel
 
+var rescan_button: Button = null
 var _current_report: Dictionary = {}
 var _is_scanned: bool = false
 var _closed_emitted: bool = false
@@ -52,6 +54,20 @@ func _ensure_nodes() -> void:
 		close_button = get_node_or_null("Panel/CloseButton")
 		results_box = get_node_or_null("Panel/ResultsScroll/ResultsBox")
 		count_label = get_node_or_null("Panel/CountLabel")
+
+	if panel_root != null and rescan_button == null:
+		if panel_root.has_node("RescanButton"):
+			rescan_button = panel_root.get_node("RescanButton")
+		else:
+			rescan_button = Button.new()
+			rescan_button.name = "RescanButton"
+			rescan_button.text = "СКАНИРОВАТЬ СНОВА"
+			rescan_button.position = Vector2(32, 350)
+			rescan_button.size = Vector2(210, 44)
+			rescan_button.add_theme_font_size_override("font_size", 11)
+			rescan_button.visible = false
+			rescan_button.pressed.connect(_on_scan_pressed)
+			panel_root.add_child(rescan_button)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -104,11 +120,16 @@ func set_report(report: Dictionary) -> void:
 		if scan_button:
 			scan_button.visible = true
 			scan_button.disabled = false
+		if rescan_button:
+			rescan_button.visible = false
 		return
 
 	_is_scanned = true
 	if scan_button:
 		scan_button.visible = false
+	if rescan_button:
+		rescan_button.visible = true
+		rescan_button.disabled = false
 
 	var faults: Array = _extract_faults(report)
 	if faults.is_empty():
@@ -119,7 +140,7 @@ func set_report(report: Dictionary) -> void:
 			count_label.modulate = PALETTE_SIGNAL
 	else:
 		if status_label:
-			status_label.text = "ОБНАРУЖЕНЫ КРИТИЧЕСКИЕ ДЕФЕКТЫ"
+			status_label.text = "ОБНАРУЖЕНЫ КРИТИЧЕСКИЕ ДЕФЕКТЫ — ВЫБЕРИТЕ УЗЕЛ ДЛЯ РЕМОНТА"
 		if count_label:
 			count_label.text = "НЕИСПРАВНОСТЕЙ: %d" % faults.size()
 			count_label.modulate = PALETTE_ALERT
@@ -137,6 +158,7 @@ func _extract_faults(report: Dictionary) -> Array:
 			if p is Dictionary:
 				var d := p as Dictionary
 				res.append({
+					"id": d.get("id", ""),
 					"code": d.get("fault_code", d.get("code", "E-000")),
 					"tag": d.get("tag", ""),
 					"symptom": d.get("symptom", d.get("label", "Неизвестный дефект")),
@@ -186,6 +208,21 @@ func _add_fault_entry(fault: Dictionary) -> void:
 	symptom_label.add_theme_font_size_override("font_size", 11)
 	row.add_child(symptom_label)
 
+	var part_id := str(fault.get("id", tag_str))
+	if part_id == "" and tag_str != "":
+		part_id = tag_str
+	if part_id != "":
+		var select_btn := Button.new()
+		select_btn.text = "ВЫБРАТЬ"
+		select_btn.custom_minimum_size = Vector2(110, 28)
+		select_btn.add_theme_font_size_override("font_size", 11)
+		select_btn.modulate = PALETTE_PALE_STEEL
+		select_btn.pressed.connect(func():
+			emit_signal("part_selected", part_id)
+			close()
+		)
+		row.add_child(select_btn)
+
 	results_box.add_child(row)
 
 
@@ -193,6 +230,8 @@ func _on_scan_pressed() -> void:
 	_ensure_nodes()
 	if scan_button:
 		scan_button.disabled = true
+	if rescan_button:
+		rescan_button.disabled = true
 	if status_label:
 		status_label.text = "СКАНИРОВАНИЕ СИСТЕМ..."
 	emit_signal("scan_requested")
