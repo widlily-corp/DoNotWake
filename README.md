@@ -2,7 +2,7 @@
 
 Камерная игра о ремонте робота в одной мастерской.
 
-**Жанр:** симулятор ремонта с хоррор-напряжением · **Платформа:** ПК (Windows), управление мышью · **Движок:** Godot 4.7.2 (standard) · **Команда:** Evilbyte Studio
+**Жанр:** симулятор ремонта с хоррор-напряжением · **Платформа:** ПК (Windows) · **Движок:** Godot 4.7.2 (standard) · **Команда:** Evilbyte Studio
 
 ## Запуск
 
@@ -12,7 +12,7 @@
 
 Для сборки под Windows нужны **export templates 4.7.2**: `Editor → Manage Export Templates → Download and Install`.
 
-Если окно открывается чёрным, запускать через `tools\run_game.bat` и `tools\run_editor.bat`: они принудительно ставят Vulkan-драйвер, на котором сцена рисуется корректно.
+Если окно открывается чёрным, запускать через `tools\run_game.bat` и `tools\run_editor.bat`: они принудительно ставят Vulkan-драйвер, на котором сцена рисуется корректно. Если Godot не в `PATH`, перед запуском задать `GODOT_BIN` — полный путь к `Godot_v4.7.2-stable_win64.exe`.
 
 ## Что в прототипе
 
@@ -28,9 +28,10 @@
 
 ```
 powershell -File tools/run_all_tests.ps1
+powershell -File tools/run_all_tests.ps1 -GodotPath "C:\Godot\Godot_v4.7.2-stable_win64_console.exe"
 ```
 
-Набор автотестов на GDScript, запускается в headless-режиме Godot.
+Набор автотестов на GDScript, запускается в headless-режиме Godot. Путь к движку берётся из `-GodotPath`, переменной `GODOT_BIN` или `PATH`.
 
 ## Структура
 
