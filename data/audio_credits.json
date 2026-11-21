@@ -1,0 +1,148 @@
+{
+  "tracks": [
+    {
+      "file": "res://assets/music/menu_hum.ogg",
+      "title": "Workshop Menu Hum Loop",
+      "author": "Evilbyte Studio",
+      "license": "Procedural",
+      "url": "",
+      "modified": "Процедурный синтез (50 Hz mains hum, pink noise ventilation, LFO 0.08 Hz, seamless 3.0s xfade loop)",
+      "added": "2026-11-20"
+    },
+    {
+      "file": "res://assets/music/ambient_calm.ogg",
+      "title": "Cold Workshop Ambient Calm Loop",
+      "author": "Evilbyte Studio",
+      "license": "Procedural",
+      "url": "",
+      "modified": "Процедурный синтез (55/60 Hz sub drone, inharmonic metallic groans, seamless 4.0s xfade loop)",
+      "added": "2026-11-20"
+    },
+    {
+      "file": "res://assets/music/ambient_threat.ogg",
+      "title": "Tension Pulse Ambient Threat Loop",
+      "author": "Evilbyte Studio",
+      "license": "Procedural",
+      "url": "",
+      "modified": "Процедурный синтез (55 Hz base, open resonant bandpass, 1 Hz mechanical pulse, seamless 4.0s xfade loop)",
+      "added": "2026-11-20"
+    },
+    {
+      "file": "res://assets/music/sting_wake.ogg",
+      "title": "Wake Stinger Jolt",
+      "author": "Evilbyte Studio",
+      "license": "Procedural",
+      "url": "",
+      "modified": "Процедурный синтез (120 ms тишины, саб-бас панч 85->35 Hz, щелчок защёлки, гидравлика)",
+      "added": "2026-11-20"
+    },
+    {
+      "file": "res://assets/music/end_resolve.ogg",
+      "title": "Shift Resolve Exhale",
+      "author": "Evilbyte Studio",
+      "license": "Procedural",
+      "url": "",
+      "modified": "Процедурный синтез (пневматический сброс давления 1000->250 Hz, теплый аккорд 110/165/220 Hz)",
+      "added": "2026-11-20"
+    },
+    {
+      "file": "res://assets/music/end_fail.ogg",
+      "title": "Shift Fail Shutdown",
+      "author": "Evilbyte Studio",
+      "license": "Procedural",
+      "url": "",
+      "modified": "Процедурный синтез (глухой удар зажима 48 Hz, затухающий вой привода 550->0 Hz)",
+      "added": "2026-11-20"
+    },
+    {
+      "file": "res://assets/sounds/calm_down.wav",
+      "title": "Hydraulic Pressure Release",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Синтез гидравлического сброса давления при стабилизации",
+      "added": "2026-11-16"
+    },
+    {
+      "file": "res://assets/sounds/click.wav",
+      "title": "UI Click Mechanical",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Короткий тактильный клик переключателя",
+      "added": "2026-11-16"
+    },
+    {
+      "file": "res://assets/sounds/error_buzz.wav",
+      "title": "Error Buzzer Alert",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Зуммер ошибки выбора инструмента / срыва действия",
+      "added": "2026-11-16"
+    },
+    {
+      "file": "res://assets/sounds/horror-drone.wav",
+      "title": "Atmospheric Horror Sub Drone",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Фоновый глубокий гул операционной",
+      "added": "2026-11-17"
+    },
+    {
+      "file": "res://assets/sounds/mouse click.wav",
+      "title": "Mouse Click Button",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Микровыключатель мыши",
+      "added": "2026-11-16"
+    },
+    {
+      "file": "res://assets/sounds/repair_success.wav",
+      "title": "Repair Step Success Chime",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Подтверждающий двухтональный сигнал успешного ремонта",
+      "added": "2026-11-16"
+    },
+    {
+      "file": "res://assets/sounds/robot_awake.wav",
+      "title": "Robot Awake Alarm Whine",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Сигнал пробуждения робота и активации сенсоров",
+      "added": "2026-11-16"
+    },
+    {
+      "file": "res://assets/sounds/strap_creak.wav",
+      "title": "Restraint Strap Tension Creak",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Скрип натяжения ремней фиксации",
+      "added": "2026-11-19"
+    },
+    {
+      "file": "res://assets/sounds/strap_creak_heavy.wav",
+      "title": "Heavy Restraint Strap Creak",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Глухой скрип тяжелого натяжения ремней фиксации",
+      "added": "2026-11-19"
+    },
+    {
+      "file": "res://assets/sounds/vhs_insert.wav",
+      "title": "VHS Deck Cassette Latch",
+      "author": "Evilbyte Studio",
+      "license": "Own",
+      "url": "",
+      "modified": "Механический щелчок посадки кассеты в привод",
+      "added": "2026-11-16"
+    }
+  ]
+}

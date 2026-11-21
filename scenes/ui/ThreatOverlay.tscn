@@ -1,0 +1,133 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/threat_overlay.gd" id="1_threat"]
+
+[node name="ThreatOverlay" type="CanvasLayer"]
+layer = 60
+script = ExtResource("1_threat")
+
+[node name="HudPauseButton" type="Button" parent="."]
+visible = false
+offset_left = 24.0
+offset_top = 660.0
+offset_right = 204.0
+offset_bottom = 696.0
+theme_override_colors/font_color = Color(0.929, 0.941, 0.957, 1)
+theme_override_font_sizes/font_size = 10
+text = "ПАУЗА [P]"
+
+[node name="WakeOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1280.0
+offset_bottom = 720.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Darkener" type="ColorRect" parent="WakeOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.02, 0.02, 0.75)
+
+[node name="BorderTop" type="ColorRect" parent="WakeOverlay"]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 8.0
+color = Color(0.902, 0.157, 0.082, 1)
+
+[node name="BorderBottom" type="ColorRect" parent="WakeOverlay"]
+layout_mode = 0
+offset_top = 712.0
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.902, 0.157, 0.082, 1)
+
+[node name="CenterBox" type="VBoxContainer" parent="WakeOverlay"]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 260.0
+offset_right = 940.0
+offset_bottom = 440.0
+theme_override_constants/separation = 16
+
+[node name="WarningLabel" type="Label" parent="WakeOverlay/CenterBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.157, 0.082, 1)
+theme_override_font_sizes/font_size = 24
+text = "ЗАМРИТЕ!"
+horizontal_alignment = 1
+
+[node name="SubLabel" type="Label" parent="WakeOverlay/CenterBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.929, 0.941, 0.957, 1)
+theme_override_font_sizes/font_size = 11
+text = "РОБОТ РЕАГИРУЕТ НА ДВИЖЕНИЕ МЫШИ"
+horizontal_alignment = 1
+
+[node name="TimerBar" type="ProgressBar" parent="WakeOverlay/CenterBox"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="PauseOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1280.0
+offset_bottom = 720.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Dimmer" type="ColorRect" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.102, 0.125, 0.157, 0.65)
+
+[node name="Banner" type="PanelContainer" parent="PauseOverlay"]
+layout_mode = 0
+offset_left = 380.0
+offset_top = 260.0
+offset_right = 900.0
+offset_bottom = 440.0
+
+[node name="VBox" type="VBoxContainer" parent="PauseOverlay/Banner"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="PauseTitle" type="Label" parent="PauseOverlay/Banner/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.455, 0.545, 0.569, 1)
+theme_override_font_sizes/font_size = 14
+text = "РЕМОНТ ПРИОСТАНОВЛЕН"
+horizontal_alignment = 1
+
+[node name="PauseDesc" type="Label" parent="PauseOverlay/Banner/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.8, 0.78, 1)
+theme_override_font_sizes/font_size = 10
+text = "СИСТЕМЫ ОХЛАЖДАЮТСЯ · ВРЕМЯ СМЕНЫ ИДЁТ"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PauseOverlay/Banner/VBox"]
+custom_minimum_size = Vector2(240, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.929, 0.941, 0.957, 1)
+theme_override_font_sizes/font_size = 11
+text = "ПРОДОЛЖИТЬ [P]"

@@ -11,46 +11,170 @@
   "freeze_penalty": 15.0,
   "calm_after_wake": 45.0,
   "max_wakes_allowed": 3,
+  "robot_layout": {
+    "viewport_size": [1280, 720],
+    "containment_rig_rect": [480, 50, 320, 570],
+    "robot_rect": [505, 65, 270, 542],
+    "straps": [
+      { "id": "collar_strap", "rect": [485, 185, 310, 20] },
+      { "id": "waist_strap", "rect": [485, 385, 310, 22] },
+      { "id": "shin_strap", "rect": [485, 505, 310, 22] }
+    ],
+    "medical_tray_rect": [80, 580, 1120, 130],
+    "optics": {
+      "visor_rect": [619, 137, 42, 16],
+      "warn_distance": 180.0,
+      "danger_distance": 45.0,
+      "calm_pulse_min_interval": 4.5,
+      "calm_pulse_max_interval": 8.0,
+      "calm_pulse_duration": 1.25
+    }
+  },
+  "procedural_animation": {
+    "breathing": {
+      "amplitude": 3.0,
+      "frequency": 0.5,
+      "delay": 0.4
+    },
+    "mouse_proximity": {
+      "distance": 180.0,
+      "sensitivity": 0.85
+    },
+    "optic_glow": {
+      "calm": "#748B91",
+      "twitch": "#D8C29A",
+      "alert": "#E62815",
+      "complete": "#EDF0F4",
+      "intensity": 0.85,
+      "radius": 14.0
+    },
+    "steam_particles": {
+      "count": 24,
+      "lifetime": 1.4,
+      "speed_min": 25.0,
+      "speed_max": 65.0,
+      "spread_deg": 32.0,
+      "gravity_y": -22.0,
+      "scale_min": 2.0,
+      "scale_max": 5.0,
+      "color": "#C4CDD6",
+      "alpha_start": 0.65,
+      "alpha_end": 0.0
+    },
+    "proximity_awareness": {
+      "enabled": true,
+      "max_tilt_deg": 1.6,
+      "tilt_damping": 7.5,
+      "hydraulic_jitter_amp": 0.45,
+      "hydraulic_strain_y": -1.2,
+      "pulse_frequency": 6.5,
+      "stepper_cooldown_min": 0.28,
+      "stepper_cooldown_max": 0.65,
+      "stepper_volume_db": -22.0,
+      "stepper_pitch_min": 1.8,
+      "stepper_pitch_max": 2.4,
+      "zones": [
+        {
+          "id": "temporal_port",
+          "name": "Височный порт",
+          "type": "point",
+          "pos": [640, 160],
+          "radius": 85.0,
+          "tilt_multiplier": 1.2
+        },
+        {
+          "id": "contacts",
+          "name": "Контакты сервопривода",
+          "type": "rect",
+          "rect": [585, 215, 110, 45],
+          "radius": 75.0,
+          "tilt_multiplier": 1.0
+        },
+        {
+          "id": "armor_hatch",
+          "name": "Силовой бронелюк",
+          "type": "rect",
+          "rect": [570, 275, 140, 90],
+          "radius": 85.0,
+          "tilt_multiplier": 0.85
+        }
+      ]
+    }
+  },
   "stages": [
     {
       "id": "clean",
-      "title": "ЭТАП 1: ЧИСТКА",
-      "instruction": "Удалите пыль и нагар с контактов",
+      "title": "ЭТАП 1: ТАКТИЛЬНАЯ ЧИСТКА",
+      "instruction": "Захватите ветошь и сотрите нагар с контактов. Контролируйте скорость трения!",
       "recommended_tool": "cloth",
+      "tactile_mode": "scrub",
       "zones": [
         {
           "id": "contacts",
           "label": "Контакты сервопривода",
           "tool": "cloth",
-          "rect": [585, 445, 190, 105]
+          "rect": [585, 215, 110, 45],
+          "scrub_params": {
+            "safe_speed_min": 120.0,
+            "safe_speed_max": 600.0,
+            "clean_rate": 0.00065,
+            "friction_heat_rate": 0.012,
+            "target_clean_ratio": 0.95,
+            "overheat_penalty": 6.0,
+            "dirt_mask_size": [110, 45]
+          }
         }
       ]
     },
     {
       "id": "replace",
-      "title": "ЭТАП 2: ЗАМЕНА ДЕТАЛЕЙ",
-      "instruction": "Вскройте крепёж силовой панели",
+      "title": "ЭТАП 2: ДЕМОНТАЖ БРОНЕЛЮКА",
+      "instruction": "Выкрутите 4 болта отверткой и снимите люк. Избегайте срыва шлица!",
       "recommended_tool": "screwdriver",
+      "tactile_mode": "unbolt_and_remove",
       "zones": [
         {
           "id": "panel",
-          "label": "Силовая панель",
+          "label": "Силовой бронелюк",
           "tool": "screwdriver",
-          "rect": [585, 315, 190, 105]
+          "rect": [570, 275, 140, 90],
+          "bolts": [
+            { "id": "bolt_tl", "pos": [590, 295], "radius": 14.0, "turns_required": 3.0 },
+            { "id": "bolt_tr", "pos": [690, 295], "radius": 14.0, "turns_required": 3.0 },
+            { "id": "bolt_bl", "pos": [590, 345], "radius": 14.0, "turns_required": 3.0 },
+            { "id": "bolt_br", "pos": [690, 345], "radius": 14.0, "turns_required": 3.0 }
+          ],
+          "slip_params": {
+            "snap_radius": 16.0,
+            "slip_radius": 36.0,
+            "max_angular_accel": 2500.0,
+            "slip_penalty": 14.0,
+            "slip_shake": 5.0
+          }
         }
       ]
     },
     {
       "id": "firmware",
-      "title": "ЭТАП 3: КАЛИБРОВКА И ПРОШИВКА",
-      "instruction": "Введите команды сброса аварийных регистров",
-      "recommended_tool": "keyboard",
+      "title": "ЭТАП 3: ПУПОВИННЫЙ КАБЕЛЬ И ПИТАНИЕ",
+      "instruction": "Протяните бронекабель к височному порту, совместите направляющий паз и зафиксируйте замок!",
+      "recommended_tool": "cable",
+      "tactile_mode": "cable_lock",
       "zones": [
         {
           "id": "terminal",
-          "label": "Диагностический порт",
-          "tool": "keyboard",
-          "rect": [585, 200, 190, 95]
+          "label": "Височный байонетный порт",
+          "tool": "cable",
+          "rect": [612, 132, 56, 56],
+          "cable_params": {
+            "socket_pos": [640, 160],
+            "socket_radius": 26.0,
+            "cable_anchor": [980, 640],
+            "keyway_angle_deg": 90.0,
+            "angle_tolerance_deg": 15.0,
+            "lock_hold_time": 0.8,
+            "surge_twitch_time": 1.2
+          }
         }
       ]
     }
@@ -58,18 +182,43 @@
   "tools": [
     {
       "id": "cloth",
-      "label": "Тряпка",
-      "rect": [120, 615, 220, 72]
+      "label": "Ветошь",
+      "rect": [140, 600, 160, 90]
     },
     {
       "id": "screwdriver",
-      "label": "Отвёртка",
-      "rect": [370, 615, 220, 72]
+      "label": "Отвертка",
+      "rect": [360, 600, 180, 80]
     },
     {
-      "id": "keyboard",
-      "label": "Клавиатура",
-      "rect": [620, 615, 220, 72]
+      "id": "cable",
+      "label": "Кабель",
+      "rect": [940, 600, 180, 80]
     }
-  ]
+  ],
+  "loop": {
+    "diagnostics_seconds": 2.0,
+    "wrong_part_penalty": 5.0,
+    "wrong_doc_penalty": 4.0,
+    "order_penalty": 10.0,
+    "timeout_penalty": 8.0,
+    "pause": {
+      "cool_rate": 1.2,
+      "max_seconds": 25.0,
+      "resume_delay": 0.6,
+      "cooldown_seconds": 20.0,
+      "max_uses_per_shift": 3
+    },
+    "threat_control": {
+      "hold_seconds": 3.0,
+      "motion_limit": 1.2,
+      "safe_margin": 10.0
+    },
+    "verify": {
+      "pass_reward": 10.0,
+      "fail_penalty": 12.0,
+      "max_attempts": 2
+    },
+    "shift_time_limit": 600.0
+  }
 }

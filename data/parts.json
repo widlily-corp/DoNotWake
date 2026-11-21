@@ -1,0 +1,215 @@
+{
+  "tutorial_part_id": "srv_04",
+  "parts": [
+    {
+      "id": "srv_04",
+      "tag": "A-04",
+      "label": "Сервопривод плеча",
+      "component_name": "Сервопривод плечевого шарнира",
+      "fault_code": "E-217",
+      "symptom": "Дрожание манипулятора под нагрузкой",
+      "doc_id": "doc_a04",
+      "zone": "shoulder",
+      "tag_pos": [612, 236],
+      "difficulty": 1,
+      "steps": [
+        {
+          "id": "clean_contacts",
+          "type": "scrub",
+          "tool": "cloth",
+          "label": "Очистить контакты",
+          "time_limit": 25.0,
+          "params": {
+            "rect": [585, 215, 110, 45],
+            "safe_speed_min": 80.0,
+            "safe_speed_max": 650.0,
+            "clean_rate": 0.0015,
+            "target_ratio": 0.95,
+            "friction_heat_rate": 0.012,
+            "overheat_penalty": 6.0
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 6.0,
+            "timeout": 8.0
+          }
+        },
+        {
+          "id": "lock_cable",
+          "type": "cable_lock",
+          "tool": "none",
+          "label": "Подать питание",
+          "time_limit": 15.0,
+          "params": {
+            "socket_pos": [640, 160],
+            "socket_radius": 32.0,
+            "cable_anchor": [980, 640],
+            "keyway_angle_deg": 90.0,
+            "angle_tolerance_deg": 22.0,
+            "lock_hold_time": 0.6
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 10.0,
+            "timeout": 8.0
+          }
+        }
+      ],
+      "verify": {
+        "type": "pulse",
+        "expected": 0.85,
+        "tolerance": 0.1,
+        "time_limit": 8.0
+      },
+      "reward": 8.0,
+      "penalty": 10.0
+    },
+    {
+      "id": "pwr_02",
+      "tag": "B-02",
+      "label": "Силовая шина",
+      "component_name": "Блок питания и шина распределения",
+      "fault_code": "P-044",
+      "symptom": "Падение напряжения в цепи",
+      "doc_id": "doc_b02",
+      "zone": "chest",
+      "tag_pos": [640, 360],
+      "difficulty": 2,
+      "steps": [
+        {
+          "id": "unbolt_hatch",
+          "type": "unbolt",
+          "tool": "screwdriver",
+          "label": "Демонтировать люк",
+          "time_limit": 30.0,
+          "params": {
+            "hatch_rect": [570, 275, 140, 90],
+            "bolts": [
+              { "id": "bolt_tl", "pos": [590, 295], "radius": 14.0, "turns_required": 2.0 },
+              { "id": "bolt_tr", "pos": [690, 295], "radius": 14.0, "turns_required": 2.0 },
+              { "id": "bolt_bl", "pos": [590, 345], "radius": 14.0, "turns_required": 2.0 },
+              { "id": "bolt_br", "pos": [690, 345], "radius": 14.0, "turns_required": 2.0 }
+            ],
+            "slip_params": {
+              "snap_radius": 18.0,
+              "slip_radius": 44.0,
+              "max_angular_accel": 3500.0,
+              "slip_penalty": 10.0,
+              "slip_shake": 5.0
+            }
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 8.0,
+            "timeout": 8.0
+          }
+        },
+        {
+          "id": "clean_bus",
+          "type": "scrub",
+          "tool": "cloth",
+          "label": "Очистить шину",
+          "time_limit": 20.0,
+          "params": {
+            "rect": [580, 290, 120, 60],
+            "safe_speed_min": 80.0,
+            "safe_speed_max": 650.0,
+            "clean_rate": 0.0015,
+            "target_ratio": 0.95,
+            "friction_heat_rate": 0.012,
+            "overheat_penalty": 6.0
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 8.0,
+            "timeout": 8.0
+          }
+        },
+        {
+          "id": "stabilize_power",
+          "type": "hold",
+          "tool": "none",
+          "label": "Стабилизировать цепь",
+          "time_limit": 15.0,
+          "params": {
+            "rect": [590, 300, 100, 40],
+            "duration": 2.5,
+            "motion_tolerance": 2.0
+          },
+          "instability": {
+            "success": -6.0,
+            "fail": 10.0,
+            "timeout": 8.0
+          }
+        }
+      ],
+      "verify": {
+        "type": "pulse",
+        "expected": 1.0,
+        "tolerance": 0.1,
+        "time_limit": 8.0
+      },
+      "reward": 10.0,
+      "penalty": 12.0
+    },
+    {
+      "id": "opt_07",
+      "tag": "C-07",
+      "label": "Блок оптики",
+      "component_name": "Визорный оптический сенсор",
+      "fault_code": "O-103",
+      "symptom": "Рассинхронизация скан-луча",
+      "doc_id": "doc_c07",
+      "zone": "head",
+      "tag_pos": [640, 140],
+      "difficulty": 3,
+      "steps": [
+        {
+          "id": "calibrate_optic",
+          "type": "calibrate",
+          "tool": "none",
+          "label": "Калибровать луч",
+          "time_limit": 20.0,
+          "params": {
+            "rect": [610, 130, 60, 30],
+            "min": 0.0,
+            "max": 100.0,
+            "target": 65.0,
+            "tolerance": 6.0,
+            "control": "drag"
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 8.0,
+            "timeout": 8.0
+          }
+        },
+        {
+          "id": "verify_optic",
+          "type": "hold",
+          "tool": "none",
+          "label": "Удержать фокус",
+          "time_limit": 15.0,
+          "params": {
+            "rect": [619, 137, 42, 16],
+            "duration": 2.5,
+            "motion_tolerance": 1.8
+          },
+          "instability": {
+            "success": -6.0,
+            "fail": 10.0,
+            "timeout": 8.0
+          }
+        }
+      ],
+      "verify": {
+        "type": "pulse",
+        "expected": 0.92,
+        "tolerance": 0.08,
+        "time_limit": 8.0
+      },
+      "reward": 10.0,
+      "penalty": 12.0
+    }
+  ]
+}

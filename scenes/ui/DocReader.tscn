@@ -1,0 +1,170 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/doc_reader.gd" id="1_docreader"]
+
+[node name="DocReader" type="CanvasLayer"]
+layer = 40
+visible = false
+script = ExtResource("1_docreader")
+
+[node name="Dimmer" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1280.0
+offset_bottom = 720.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.102, 0.125, 0.157, 0.85)
+
+[node name="Sheet" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 680.0
+offset_bottom = 680.0
+
+[node name="PaperBg" type="ColorRect" parent="Sheet"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.82, 0.8, 0.78, 1)
+
+[node name="Header" type="VBoxContainer" parent="Sheet"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 620.0
+offset_bottom = 80.0
+theme_override_constants/separation = 4
+
+[node name="StampLabel" type="Label" parent="Sheet/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.455, 0.545, 0.569, 1)
+theme_override_font_sizes/font_size = 9
+text = "РЕГЛАМЕНТ ТО · УТВЕРЖДЕНО"
+
+[node name="TagLabel" type="Label" parent="Sheet/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.102, 0.125, 0.157, 1)
+theme_override_font_sizes/font_size = 14
+text = "[A-04]"
+
+[node name="TitleLabel" type="Label" parent="Sheet/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.102, 0.125, 0.157, 1)
+theme_override_font_sizes/font_size = 10
+text = "Сервопривод плечевого шарнира"
+
+[node name="ContentScroll" type="ScrollContainer" parent="Sheet"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 88.0
+offset_right = 620.0
+offset_bottom = 560.0
+horizontal_scroll_mode = 0
+
+[node name="ContentBox" type="VBoxContainer" parent="Sheet/ContentScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="ToolsBlock" type="VBoxContainer" parent="Sheet/ContentScroll/ContentBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ToolsTitle" type="Label" parent="Sheet/ContentScroll/ContentBox/ToolsBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.353, 0.349, 1)
+theme_override_font_sizes/font_size = 9
+text = "ТРЕБУЕМЫЙ ИНСТРУМЕНТ:"
+
+[node name="ToolsList" type="Label" parent="Sheet/ContentScroll/ContentBox/ToolsBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.102, 0.125, 0.157, 1)
+theme_override_font_sizes/font_size = 10
+text = "ВЕТОШЬ · КАБЕЛЬ"
+
+[node name="SafetyBlock" type="VBoxContainer" parent="Sheet/ContentScroll/ContentBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="SafetyTitle" type="Label" parent="Sheet/ContentScroll/ContentBox/SafetyBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.545, 0.286, 0.267, 1)
+theme_override_font_sizes/font_size = 9
+text = "ТЕХНИКА БЕЗОПАСНОСТИ:"
+
+[node name="SafetyBox" type="VBoxContainer" parent="Sheet/ContentScroll/ContentBox/SafetyBlock"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StepsBlock" type="VBoxContainer" parent="Sheet/ContentScroll/ContentBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StepsTitle" type="Label" parent="Sheet/ContentScroll/ContentBox/StepsBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.353, 0.349, 1)
+theme_override_font_sizes/font_size = 9
+text = "ТЕХНОЛОГИЧЕСКИЙ ПОРЯДОК:"
+
+[node name="StepsBox" type="VBoxContainer" parent="Sheet/ContentScroll/ContentBox/StepsBlock"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TimeBlock" type="HBoxContainer" parent="Sheet/ContentScroll/ContentBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TimeTitle" type="Label" parent="Sheet/ContentScroll/ContentBox/TimeBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.353, 0.349, 1)
+theme_override_font_sizes/font_size = 9
+text = "НОРМА ВРЕМЕНИ:"
+
+[node name="TimeValue" type="Label" parent="Sheet/ContentScroll/ContentBox/TimeBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.102, 0.125, 0.157, 1)
+theme_override_font_sizes/font_size = 10
+text = "01:30"
+
+[node name="NotesBlock" type="VBoxContainer" parent="Sheet/ContentScroll/ContentBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="NotesTitle" type="Label" parent="Sheet/ContentScroll/ContentBox/NotesBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.353, 0.349, 1)
+theme_override_font_sizes/font_size = 9
+text = "ОСОБЫЕ УКАЗАНИЯ:"
+
+[node name="NotesBox" type="VBoxContainer" parent="Sheet/ContentScroll/ContentBox/NotesBlock"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ButtonsBar" type="HBoxContainer" parent="Sheet"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 574.0
+offset_right = 620.0
+offset_bottom = 624.0
+theme_override_constants/separation = 16
+
+[node name="StartRepairButton" type="Button" parent="Sheet/ButtonsBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.929, 0.941, 0.957, 1)
+theme_override_font_sizes/font_size = 11
+text = "НАЧАТЬ РЕМОНТ [ENTER]"
+
+[node name="CloseButton" type="Button" parent="Sheet/ButtonsBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+theme_override_colors/font_color = Color(0.929, 0.941, 0.957, 1)
+theme_override_font_sizes/font_size = 10
+text = "ЗАКРЫТЬ [ESC]"

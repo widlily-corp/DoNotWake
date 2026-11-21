@@ -1,0 +1,114 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/card_file.gd" id="1_cardfile"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/ui_panel.png" id="2_panel_tex"]
+
+[node name="CardFile" type="CanvasLayer"]
+layer = 30
+visible = false
+script = ExtResource("1_cardfile")
+
+[node name="Dimmer" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1280.0
+offset_bottom = 720.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.102, 0.125, 0.157, 0.85)
+
+[node name="Cabinet" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 40.0
+offset_right = 664.0
+offset_bottom = 680.0
+
+[node name="Background" type="NinePatchRect" parent="Cabinet"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_panel_tex")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+
+[node name="Header" type="VBoxContainer" parent="Cabinet"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 616.0
+offset_bottom = 66.0
+theme_override_constants/separation = 4
+
+[node name="TitleLabel" type="Label" parent="Cabinet/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.929, 0.941, 0.957, 1)
+theme_override_font_sizes/font_size = 12
+text = "КАРТОТЕКА ТЕХДОКУМЕНТАЦИИ"
+
+[node name="SubtitleLabel" type="Label" parent="Cabinet/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.455, 0.545, 0.569, 1)
+theme_override_font_sizes/font_size = 9
+text = "АРХИВ СЛУЖБЫ ЭКСПЛУАТАЦИИ · ВЫБЕРИТЕ РЕГЛАМЕНТ"
+
+[node name="SearchBox" type="HBoxContainer" parent="Cabinet"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 74.0
+offset_right = 616.0
+offset_bottom = 108.0
+theme_override_constants/separation = 8
+
+[node name="SearchLabel" type="Label" parent="Cabinet/SearchBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.769, 0.804, 0.839, 1)
+theme_override_font_sizes/font_size = 10
+text = "ПОИСК:"
+
+[node name="SearchEdit" type="LineEdit" parent="Cabinet/SearchBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+placeholder_text = "ВВЕДИТЕ ТЕГ ИЛИ КОД (НАПР. A-04)"
+
+[node name="ErrorLabel" type="Label" parent="Cabinet"]
+visible = false
+layout_mode = 0
+offset_left = 24.0
+offset_top = 114.0
+offset_right = 616.0
+offset_bottom = 134.0
+theme_override_colors/font_color = Color(0.902, 0.157, 0.082, 1)
+theme_override_font_sizes/font_size = 10
+text = "НЕ ТОТ РЕГЛАМЕНТ!"
+
+[node name="DrawersScroll" type="ScrollContainer" parent="Cabinet"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 140.0
+offset_right = 616.0
+offset_bottom = 560.0
+horizontal_scroll_mode = 0
+
+[node name="DrawersBox" type="VBoxContainer" parent="Cabinet/DrawersScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="CloseButton" type="Button" parent="Cabinet"]
+layout_mode = 0
+offset_left = 446.0
+offset_top = 576.0
+offset_right = 616.0
+offset_bottom = 616.0
+theme_override_colors/font_color = Color(0.929, 0.941, 0.957, 1)
+theme_override_font_sizes/font_size = 10
+text = "ЗАКРЫТЬ [ESC]"

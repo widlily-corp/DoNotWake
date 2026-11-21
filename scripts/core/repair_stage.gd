@@ -56,7 +56,7 @@ func try_repair(zone_index: int, selected_tool_id: String) -> Dictionary:
 		return {"success": true, "already_done": true, "message": "Узел уже починен", "delta_instability": 0.0}
 
 	var required_tool: String = str(z.get("tool", ""))
-	if selected_tool_id == required_tool:
+	if selected_tool_id == required_tool or (required_tool == "cable" and selected_tool_id == "keyboard"):
 		z["done"] = true
 		return {
 			"success": true,

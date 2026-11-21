@@ -18,6 +18,8 @@ var timecode_seconds: float = 868.0
 var rec_timer: float = 0.0
 var title_drift_timer: float = 0.0
 var original_title_pos: Vector2 = Vector2.ZERO
+var _last_timecode_frame: int = -1
+var _timecode_params: Array = [0, 0, 0, 0]
 
 # 2.5D-глубина: корпус ТВ и VHS-привод живут на разных слоях (data/parallax.json)
 var parallax: ParallaxRig
@@ -94,11 +96,19 @@ func update_timecode_string() -> void:
 	if not timecode_lbl:
 		return
 	var total_sec := int(timecode_seconds)
+	var frames := int(fmod(timecode_seconds, 1.0) * 24.0)
+	var time_key := total_sec * 24 + frames
+	if time_key == _last_timecode_frame:
+		return
+	_last_timecode_frame = time_key
 	var hrs := total_sec / 3600
 	var mins := (total_sec % 3600) / 60
 	var secs := total_sec % 60
-	var frames := int(fmod(timecode_seconds, 1.0) * 24.0)
-	timecode_lbl.text = "CH 03   SP   %02d:%02d:%02d:%02d" % [hrs, mins, secs, frames]
+	_timecode_params[0] = hrs
+	_timecode_params[1] = mins
+	_timecode_params[2] = secs
+	_timecode_params[3] = frames
+	timecode_lbl.text = "CH 03   SP   %02d:%02d:%02d:%02d" % _timecode_params
 
 
 func _on_cassette_gui_input(event: InputEvent) -> void:

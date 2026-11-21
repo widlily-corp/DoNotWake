@@ -72,40 +72,41 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(620, 340)
+custom_minimum_size = Vector2(640, 360)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_panel")
 
 [node name="Margin" type="MarginContainer" parent="CenterContainer/Panel"]
 layout_mode = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 34
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 34
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 28
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer/Panel/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 alignment = 1
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/Panel/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.92, 0.95, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "РЕЗУЛЬТАТ СМЕНЫ"
 horizontal_alignment = 1
 
 [node name="DetailsLabel" type="Label" parent="CenterContainer/Panel/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.77, 0.80, 0.84, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 10
 text = "Описание статуса смены..."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="StatsLabel" type="Label" parent="CenterContainer/Panel/Margin/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.60, 0.66, 1)
+theme_override_colors/font_color = Color(0.68, 0.74, 0.80, 1)
+theme_override_constants/line_spacing = 6
 theme_override_font_sizes/font_size = 10
 text = "Статистика:"
 horizontal_alignment = 1
@@ -119,7 +120,7 @@ theme_override_constants/separation = 24
 alignment = 1
 
 [node name="BtnRestart" type="Button" parent="CenterContainer/Panel/Margin/VBox/HBoxButtons"]
-custom_minimum_size = Vector2(220, 44)
+custom_minimum_size = Vector2(200, 44)
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_color = Color(0.88, 0.90, 0.93, 1)
@@ -131,10 +132,10 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_pressed")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_btn_disabled")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
-text = "ПОВТОРИТЬ СМЕНУ"
+text = "ПОВТОРИТЬ"
 
 [node name="BtnMenu" type="Button" parent="CenterContainer/Panel/Margin/VBox/HBoxButtons"]
-custom_minimum_size = Vector2(220, 44)
+custom_minimum_size = Vector2(200, 44)
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_color = Color(0.70, 0.74, 0.79, 1)
@@ -145,7 +146,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_pressed")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_btn_disabled")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
-text = "ГЛАВНОЕ МЕНЮ"
+text = "ВЫХОД"
 
 [node name="SFXClick" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_click")

@@ -16,6 +16,7 @@ var _checks: int = 0
 func _init() -> void:
 	print("--- ЗАПУСК АВТОТЕСТОВ ИГРОВОГО ЯДРА ---")
 	_test_balance_loading()
+	_test_procedural_interactivity_and_animations()
 	_test_game_loop_and_stages()
 	_test_instability_and_awake_flow()
 	_test_freeze_grace()
@@ -55,6 +56,95 @@ func _test_balance_loading() -> void:
 	_check(Balance.to_rect([10, 20, 30, 40]) == Rect2(10, 20, 30, 40), "Balance: to_rect из массива")
 	_check(Balance.to_rect("мусор") == Rect2(), "Balance: to_rect мусора -> пустой Rect2")
 	_t("загрузка данных и защита от мусора")
+
+
+func _test_procedural_interactivity_and_animations() -> void:
+	var balance := Balance.new()
+
+	# 1. Загрузка параметров дыхания из robot.json
+	var breath := balance.get_breathing_params()
+	_check(is_equal_approx(breath["amplitude"], 3.0), "Breathing: amplitude == 3.0")
+	_check(is_equal_approx(breath["frequency"], 0.5), "Breathing: frequency == 0.5")
+	_check(is_equal_approx(breath["delay"], 0.4), "Breathing: delay == 0.4")
+
+	# 2. Загрузка порогов реакции на приближение мыши
+	var prox := balance.get_mouse_proximity_params()
+	_check(is_equal_approx(prox["distance"], 180.0), "Mouse Proximity: distance == 180.0")
+	_check(is_equal_approx(prox["sensitivity"], 0.85), "Mouse Proximity: sensitivity == 0.85")
+
+	# 3. Загрузка цветов свечения оптики
+	var optics := balance.get_optic_glow_params()
+	_check(optics["calm"].is_equal_approx(Color.from_string("#748B91", Color.WHITE)), "Optic Glow: calm color matches #748B91")
+	_check(optics["alert"].is_equal_approx(Color.from_string("#E62815", Color.WHITE)), "Optic Glow: alert color matches #E62815")
+	_check(balance.get_optic_color("calm") == optics["calm"], "Optic Glow: get_optic_color('calm')")
+	_check(balance.get_optic_color("alert") == optics["alert"], "Optic Glow: get_optic_color('alert')")
+
+	# 4. Загрузка параметров частиц пара
+	var steam := balance.get_steam_particle_params()
+	_check(steam["count"] == 24, "Steam: count == 24")
+	_check(is_equal_approx(steam["lifetime"], 1.4), "Steam: lifetime == 1.4")
+	_check(is_equal_approx(steam["speed_min"], 25.0), "Steam: speed_min == 25.0")
+	_check(is_equal_approx(steam["speed_max"], 65.0), "Steam: speed_max == 65.0")
+	_check(steam["color"].is_equal_approx(Color.from_string("#C4CDD6", Color.WHITE)), "Steam: color matches #C4CDD6")
+
+	# 5. Сводный словарь get_procedural_animation()
+	var proc := balance.get_procedural_animation()
+	_check(proc.has("breathing") and proc.has("mouse_proximity") and proc.has("optic_glow") and proc.has("steam_particles"), "Procedural animation: all 4 modules present")
+
+	# 6. Защита от мусора и валидация типов
+	# to_color
+	_check(Balance.to_color("#E62815") == Color.from_string("#E62815", Color.WHITE), "Balance: to_color валидный hex")
+	_check(Balance.to_color("E62815") == Color.from_string("#E62815", Color.WHITE), "Balance: to_color hex без решетки")
+	_check(Balance.to_color(Color.RED) == Color.RED, "Balance: to_color объект Color")
+	_check(Balance.to_color([1.0, 0.0, 0.0]) == Color(1.0, 0.0, 0.0), "Balance: to_color RGB массив")
+	_check(Balance.to_color("мусор", Color.BLUE) == Color.BLUE, "Balance: to_color мусор -> fallback")
+	_check(Balance.to_color(12345, Color.BLUE) == Color.BLUE, "Balance: to_color невалидный тип -> fallback")
+
+	# Подмена на мусорный конфиг
+	var junk_balance := Balance.new()
+	junk_balance.data = {
+		"procedural_animation": "мусор вместо словаря"
+	}
+	var junk_breath := junk_balance.get_breathing_params()
+	_check(is_equal_approx(junk_breath["amplitude"], Balance.DEFAULT_BREATHING["amplitude"]), "Breathing: мусорный блок -> fallback amplitude")
+	_check(is_equal_approx(junk_breath["frequency"], Balance.DEFAULT_BREATHING["frequency"]), "Breathing: мусорный блок -> fallback frequency")
+
+	junk_balance.data = {
+		"procedural_animation": {
+			"breathing": {"amplitude": "мусор", "frequency": -10.0, "delay": "не число"},
+			"mouse_proximity": {"distance": null, "sensitivity": 999.0},
+			"optic_glow": {"calm": "не цвет", "alert": 123},
+			"steam_particles": {"count": "много", "lifetime": 0.0}
+		}
+	}
+	var safe_breath := junk_balance.get_breathing_params()
+	_check(is_equal_approx(safe_breath["amplitude"], Balance.DEFAULT_BREATHING["amplitude"]), "Breathing: невалидная амплитуда -> fallback")
+	_check(safe_breath["frequency"] >= 0.01, "Breathing: отрицательная частота скорректирована")
+
+	var safe_prox := junk_balance.get_mouse_proximity_params()
+	_check(is_equal_approx(safe_prox["distance"], Balance.DEFAULT_MOUSE_PROXIMITY["distance"]), "Mouse Proximity: null дистанция -> fallback")
+	_check(safe_prox["sensitivity"] <= 10.0, "Mouse Proximity: зашкаливающая чувствительность ограничена")
+
+	var safe_optics := junk_balance.get_optic_glow_params()
+	_check(safe_optics["calm"] == Balance.DEFAULT_OPTIC_GLOW["calm"], "Optic Glow: 'не цвет' -> fallback color")
+	_check(safe_optics["alert"] == Balance.DEFAULT_OPTIC_GLOW["alert"], "Optic Glow: число -> fallback color")
+
+	var safe_steam := junk_balance.get_steam_particle_params()
+	_check(safe_steam["count"] == Balance.DEFAULT_STEAM_PARTICLES["count"], "Steam: 'много' -> fallback count")
+	_check(safe_steam["lifetime"] >= 0.05, "Steam: нулевой lifetime скорректирован")
+
+	# 7. Интеграция с Robot
+	var robot := Robot.new()
+	robot.configure(balance)
+	_check(robot.breathing_params.size() > 0, "Robot: breathing_params настроены")
+	_check(robot.mouse_proximity_params.size() > 0, "Robot: mouse_proximity_params настроены")
+	_check(robot.optic_glow_params.size() > 0, "Robot: optic_glow_params настроены")
+	_check(robot.steam_particle_params.size() > 0, "Robot: steam_particle_params настроены")
+	_check(is_equal_approx(robot.get_breathing_offset(0.0), 0.0), "Robot: get_breathing_offset(0) == 0")
+	_check(robot.get_optic_color(false) == optics["calm"], "Robot: calm optic color")
+	_check(robot.get_optic_color(true) == optics["alert"], "Robot: alert optic color")
+
+	_t("процедурная интерактивность, дыхание, оптика, пар и валидация мусора")
 
 
 func _test_game_loop_and_stages() -> void:
