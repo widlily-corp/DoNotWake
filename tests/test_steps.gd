@@ -1,6 +1,6 @@
 extends SceneTree
 
-## Headless auto-tests for StepRunner (контракт данных §4.2).
+## Headless auto-tests for StepRunner (data contract §4.2).
 ## Tests all 5 step types (scrub, unbolt, cable_lock, hold, calibrate),
 ## wrong tool protection, freezing, abort, component isolation, and single final signal.
 

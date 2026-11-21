@@ -19,7 +19,7 @@ var _id_regex: RegEx
 
 
 func _init() -> void:
-	print("--- TEST DATA INTEGRITY (контракт данных §3.1-§3.5) ---")
+	print("--- TEST DATA INTEGRITY (data contracts §3.1-§3.5) ---")
 	_init_regexes()
 	_test_mutation_detections()
 	_test_live_files()
@@ -672,7 +672,7 @@ func _test_live_files() -> void:
 
 	# 2. parts.json
 	var parts_exists := FileAccess.file_exists(parts_path)
-	_check(parts_exists, "File existence: %s (created by данные)" % parts_path)
+	_check(parts_exists, "File existence: %s" % parts_path)
 	var parts_data: Variant = null
 	if parts_exists:
 		parts_data = _load_json_file(parts_path)
@@ -680,7 +680,7 @@ func _test_live_files() -> void:
 
 	# 3. documents.json
 	var docs_exists := FileAccess.file_exists(docs_path)
-	_check(docs_exists, "File existence: %s (created by данные)" % docs_path)
+	_check(docs_exists, "File existence: %s" % docs_path)
 	var docs_data: Variant = null
 	if docs_exists:
 		docs_data = _load_json_file(docs_path)
@@ -721,11 +721,11 @@ func _test_live_files() -> void:
 			_check(true, "Live loop params: pause, threat_control, verify configs valid")
 	else:
 		if not parts_exists:
-			print("  [INFO] data/parts.json not yet written by данные (этап 1 in progress).")
+			print("  [INFO] data/parts.json not found.")
 		if not docs_exists:
-			print("  [INFO] data/documents.json not yet written by данные (этап 1 in progress).")
+			print("  [INFO] data/documents.json not found.")
 		if robot_exists and (robot_data is Dictionary) and not (robot_data as Dictionary).has("loop"):
-			print("  [INFO] data/robot.json missing 'loop' section (pending данные update in этап 1).")
+			print("  [INFO] data/robot.json missing 'loop' section.")
 
 
 func _load_json_file(path: String) -> Variant:
@@ -738,7 +738,7 @@ func _load_json_file(path: String) -> Variant:
 
 
 # ==============================================================================
-# ЭТАЛОННЫЕ ТЕСТОВЫЕ ДАННЫЕ (контракт данных §3.1–§3.3)
+# ЭТАЛОННЫЕ ТЕСТОВЫЕ ДАННЫЕ (контракты данных §3.1–§3.3)
 # ==============================================================================
 
 func _get_valid_sample_robot() -> Dictionary:

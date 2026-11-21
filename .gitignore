@@ -2,14 +2,14 @@
 .godot/
 *.translation
 
-# сборки и архивы
+# builds and archives
 build/
 dist/
 *.zip
 *.exe
 *.pck
 
-# система
+# system
 Thumbs.db
 .DS_Store
 desktop.ini
@@ -21,4 +21,3 @@ _tmp*
 
 # previews are not game assets
 docs/preview/*.import
-

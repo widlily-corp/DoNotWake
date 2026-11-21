@@ -1,7 +1,7 @@
 class_name StepRunner
 extends Node
 
-## Universal executor for tactile repair steps (контракт данных §4.2).
+## Universal executor for tactile repair steps (data contract §4.2).
 ## Configures tactile components (ScrubZone, ScrewBoltManager, CablePlug),
 ## handles "hold" and "calibrate" mechanics, validates tools, tracks progress
 ## and instability hazards, and emits strictly ONE final signal:

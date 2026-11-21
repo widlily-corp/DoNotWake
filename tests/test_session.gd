@@ -1,6 +1,6 @@
 extends SceneTree
 
-## Тестовый сьют новой 6-фазной петли смены (Do Not Wake этап 2 / ядро)
+## Тестовый сьют новой 6-фазной петли смены (ядро петли)
 ## Проверяет Phase FSM, LoopData, тактильную паузу, угрозу/пробуждение, верификацию и легаси-режим.
 
 const GameStateScript = preload("res://scripts/core/game_state.gd")

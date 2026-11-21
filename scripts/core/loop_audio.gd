@@ -4,7 +4,7 @@ extends Node
 ## Audio Controller for the new repair loop in Do Not Wake.
 ## Controls one-shot events, procedural physical audio, ambient soundscapes,
 ## music crossfading, wake silence cutoff, and bus routing according to
-## data contracts §3.5, §4.4 and audio design specification docs/style.md.
+## data contracts §3.5, §4.4 (one-shots, buses, wake cutoff).
 
 signal event_played(event: String)
 

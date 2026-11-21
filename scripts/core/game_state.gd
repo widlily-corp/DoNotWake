@@ -14,7 +14,7 @@ signal stage_changed(stage_index: int, stage: RepairStage)
 signal game_finished(is_success: bool)
 signal feedback_triggered(message: String, is_alert: bool)
 
-# 16 Сигналов новой петли по контракты данных §4.1
+# 16 сигналов новой петли по контрактам данных §4.1
 signal phase_changed(phase: int)
 signal diagnostics_ready(report: Dictionary)
 signal part_selected(part_id: String, correct: bool)

@@ -1,4 +1,4 @@
-﻿# =============================================================================
+# =============================================================================
 # Do Not Wake — Скрипт пакетного запуска автотестов
 # =============================================================================
 # Запуск всех тестов проекта (tests/test_*.gd) в headless-режиме через консоль Godot.
@@ -9,10 +9,13 @@
 # Использование:
 #   powershell -File tools/run_all_tests.ps1
 #   powershell -File tools/run_all_tests.ps1 -Filter "test_data_integrity.gd"
+#   powershell -File tools/run_all_tests.ps1 -GodotPath "C:\Godot\Godot_v4.7.2-stable_win64_console.exe"
+#
+# Движок ищется в порядке: параметр -GodotPath → переменная окружения GODOT_BIN → PATH.
 # =============================================================================
 
 param (
-    [string]$GodotPath = "GODOT_BIN",
+    [string]$GodotPath = "",
     [string]$ProjectPath = "",
     [string]$Filter = "test_*.gd"
 )
@@ -24,9 +27,20 @@ if ([string]::IsNullOrWhiteSpace($ProjectPath)) {
     $ProjectPath = (Resolve-Path $ProjectPath).Path
 }
 
+# Поиск движка: параметр -GodotPath, переменная окружения GODOT_BIN, затем PATH
+if ([string]::IsNullOrWhiteSpace($GodotPath)) {
+    $GodotPath = $env:GODOT_BIN
+}
+if ([string]::IsNullOrWhiteSpace($GodotPath)) {
+    $candidates = @(Get-Command godot.exe, godot -ErrorAction SilentlyContinue)
+    if ($candidates.Count -gt 0) {
+        $GodotPath = $candidates[0].Source
+    }
+}
+
 # Проверка наличия исполняемого файла Godot
-if (-not (Test-Path $GodotPath)) {
-    Write-Error "CRITICAL: Godot executable not found at: '$GodotPath'"
+if ([string]::IsNullOrWhiteSpace($GodotPath) -or -not (Test-Path $GodotPath)) {
+    Write-Error "CRITICAL: Godot executable not found: '$GodotPath'. Pass -GodotPath <path>, set GODOT_BIN, or add Godot to PATH."
     exit 1
 }
 
@@ -111,7 +125,7 @@ Write-Host "Total Time:  ${totalSec}s" -ForegroundColor White
 if ($results | Where-Object { $_.TestName -eq "test_robot_interactivity.gd" -and $_.Status -eq "FAIL" }) {
     Write-Host ""
     Write-Host "NOTE: 'test_robot_interactivity.gd' is a known baseline failure (4/48 proximity awareness)" -ForegroundColor DarkYellow
-    Write-Host "      per контракт данных §8 and docs/architecture.md §4. It does not block этап 1 contracts delivery." -ForegroundColor DarkYellow
+    Write-Host "      Known prototype limitation (proximity awareness), does not block delivery." -ForegroundColor DarkYellow
 }
 
 Write-Host "=================================================================" -ForegroundColor Cyan

@@ -69,7 +69,7 @@ def quantize(img, colors):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Clean a sprite to project palette")
+    parser = argparse.ArgumentParser(description="Clean a sprite to the project palette")
     parser.add_argument("input")
     parser.add_argument("output")
     parser.add_argument("--palette", default=DEFAULT_PALETTE)

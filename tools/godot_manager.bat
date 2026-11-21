@@ -1,7 +1,8 @@
 @echo off
-rem Менеджер проектов Godot (без открытия проекта).
-rem OpenGL на этой машине рисует пустое окно, поэтому принудительно Vulkan.
+rem Open the Godot project manager (no project loaded).
+rem Vulkan is forced for the same reason as in run_editor.bat.
+rem If Godot is not on PATH, set GODOT_BIN to the engine executable first.
 setlocal
-set "GODOT_EXE=GODOT_BIN"
-start "" "%GODOT_EXE%" --rendering-driver vulkan
+if not defined GODOT_BIN set "GODOT_BIN=godot.exe"
+start "" %GODOT_BIN% --rendering-driver vulkan
 endlocal
