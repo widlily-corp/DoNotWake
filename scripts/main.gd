@@ -852,11 +852,15 @@ func _on_tool_drag_started(tool_id: String) -> void:
 		held_tool.put_down()
 	selected_tool = tool_id
 	held_tool = new_tool
-	if held_tool and held_tool.label != "":
+	if game_state and game_state.current_mode == GameState.Mode.NEW and game_state.current_phase != GameState.Phase.REPAIR:
+		message_text = "В руке: %s · Ремонт ещё не начат! Нажмите TAB, чтобы открыть терминал" % (held_tool.label.to_upper() if held_tool and held_tool.label != "" else tool_id.to_upper())
+		message_is_alert = true
+	elif held_tool and held_tool.label != "":
 		message_text = "В руке: %s · ЛКМ по лотку или ПКМ — убрать" % held_tool.label.to_upper()
+		message_is_alert = false
 	else:
 		message_text = "Инструмент в руке: " + tool_id
-	message_is_alert = false
+		message_is_alert = false
 	if sfx_click:
 		sfx_click.pitch_scale = 1.0
 		sfx_click.play()
@@ -1318,10 +1322,11 @@ func _draw() -> void:
 	# 3. Отрисовка тактильных подсистем по этапам ремонта
 	# Кабель рисуется позже верстака: штекер физически лежит на столе.
 	if game_state and game_state.current_mode == GameState.Mode.NEW:
-		if scrub_zone and scrub_zone.is_active:
-			scrub_zone.render(self, mid_shift + shake_offset)
-		if screw_manager and screw_manager.is_active:
-			screw_manager.render(self, mid_shift + shake_offset)
+		if game_state.current_phase == GameState.Phase.REPAIR:
+			if scrub_zone and scrub_zone.is_active:
+				scrub_zone.render(self, mid_shift + shake_offset)
+			if screw_manager and screw_manager.is_active:
+				screw_manager.render(self, mid_shift + shake_offset)
 	else:
 		if scrub_zone and cur_stage_idx == 0:
 			scrub_zone.render(self, mid_shift + shake_offset)
@@ -1424,7 +1429,7 @@ func _draw() -> void:
 
 	# 8. Панель текущего этапа / фазы
 	if game_state and game_state.current_mode == GameState.Mode.NEW:
-		var phase_rect := Rect2(720, 24, 520, 70)
+		var phase_rect := Rect2(720, 20, 520, 78)
 		if tex_panel:
 			_draw_nine(tex_panel, phase_rect, PANEL_MARGIN, Color(1.18, 1.22, 1.26))
 		else:
@@ -1432,8 +1437,11 @@ func _draw() -> void:
 			draw_rect(phase_rect, COLOR_BENCH_EDGE, false, 2.0)
 		var p_title := _get_phase_title(game_state.current_phase)
 		var p_instr := _get_phase_instruction(game_state.current_phase)
-		draw_string(font, Vector2(750, 48), p_title, HORIZONTAL_ALIGNMENT_LEFT, 450.0, 12, COLOR_TEXT_LIGHT)
-		draw_multiline_string(font, Vector2(750, 66), p_instr, HORIZONTAL_ALIGNMENT_LEFT, 450.0, 9, 2, COLOR_TEXT_DIM)
+		draw_string(font, Vector2(750, 44), p_title, HORIZONTAL_ALIGNMENT_LEFT, 450.0, 12, COLOR_TEXT_LIGHT)
+		draw_multiline_string(font, Vector2(750, 60), p_instr, HORIZONTAL_ALIGNMENT_LEFT, 450.0, 10, 2, COLOR_TEXT_PALE)
+		if not _is_any_modal_open() and (game_state.current_phase == GameState.Phase.DIAGNOSTICS or game_state.current_phase == GameState.Phase.DOC_SEARCH):
+			var tab_pulse := 0.6 + 0.4 * sin(anim_time * 6.0)
+			draw_string(font, Vector2(750, 86), "▶ НАЖМИТЕ [TAB], ЧТОБЫ ОТКРЫТЬ ЭКРАН", HORIZONTAL_ALIGNMENT_LEFT, 450.0, 10, Color(0.95, 0.85, 0.40, tab_pulse))
 	else:
 		var stage: RepairStage = game_state.get_current_stage() if game_state else null
 		if stage:
