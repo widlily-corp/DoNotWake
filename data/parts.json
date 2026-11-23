@@ -18,7 +18,7 @@
           "type": "scrub",
           "tool": "cloth",
           "label": "Очистить контакты",
-          "time_limit": 25.0,
+          "time_limit": 30.0,
           "params": {
             "rect": [585, 215, 110, 45],
             "safe_speed_min": 80.0,
@@ -39,7 +39,7 @@
           "type": "cable_lock",
           "tool": "none",
           "label": "Подать питание",
-          "time_limit": 15.0,
+          "time_limit": 20.0,
           "params": {
             "socket_pos": [640, 160],
             "socket_radius": 32.0,
@@ -81,7 +81,7 @@
           "type": "unbolt",
           "tool": "screwdriver",
           "label": "Демонтировать люк",
-          "time_limit": 30.0,
+          "time_limit": 40.0,
           "params": {
             "hatch_rect": [570, 275, 140, 90],
             "bolts": [
@@ -109,7 +109,7 @@
           "type": "scrub",
           "tool": "cloth",
           "label": "Очистить шину",
-          "time_limit": 20.0,
+          "time_limit": 25.0,
           "params": {
             "rect": [580, 290, 120, 60],
             "safe_speed_min": 80.0,
@@ -130,7 +130,7 @@
           "type": "hold",
           "tool": "none",
           "label": "Стабилизировать цепь",
-          "time_limit": 15.0,
+          "time_limit": 18.0,
           "params": {
             "rect": [590, 300, 100, 40],
             "duration": 2.5,
@@ -169,7 +169,7 @@
           "type": "calibrate",
           "tool": "none",
           "label": "Калибровать луч",
-          "time_limit": 20.0,
+          "time_limit": 25.0,
           "params": {
             "rect": [610, 130, 60, 30],
             "min": 0.0,
@@ -189,7 +189,7 @@
           "type": "hold",
           "tool": "none",
           "label": "Удержать фокус",
-          "time_limit": 15.0,
+          "time_limit": 18.0,
           "params": {
             "rect": [619, 137, 42, 16],
             "duration": 2.5,
@@ -206,6 +206,216 @@
         "type": "pulse",
         "expected": 0.92,
         "tolerance": 0.08,
+        "time_limit": 8.0
+      },
+      "reward": 10.0,
+      "penalty": 12.0
+    },
+    {
+      "id": "hyd_01",
+      "tag": "D-01",
+      "label": "Демпфер стопы",
+      "component_name": "Гидравлический демпфер стопы",
+      "fault_code": "H-031",
+      "symptom": "Просадка давления в контуре стопы",
+      "doc_id": "doc_d01",
+      "zone": "foot",
+      "tag_pos": [640, 520],
+      "difficulty": 2,
+      "steps": [
+        {
+          "id": "unbolt_cover",
+          "type": "unbolt",
+          "tool": "screwdriver",
+          "label": "Снять защитный кожух",
+          "time_limit": 35.0,
+          "params": {
+            "hatch_rect": [595, 465, 90, 70],
+            "bolts": [
+              { "id": "bolt_tl", "pos": [610, 480], "radius": 12.0, "turns_required": 1.5 },
+              { "id": "bolt_tr", "pos": [670, 480], "radius": 12.0, "turns_required": 1.5 },
+              { "id": "bolt_bl", "pos": [610, 520], "radius": 12.0, "turns_required": 1.5 },
+              { "id": "bolt_br", "pos": [670, 520], "radius": 12.0, "turns_required": 1.5 }
+            ],
+            "slip_params": {
+              "snap_radius": 16.0,
+              "slip_radius": 38.0,
+              "max_angular_accel": 2800.0,
+              "slip_penalty": 10.0,
+              "slip_shake": 4.0
+            }
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 8.0,
+            "timeout": 8.0
+          }
+        },
+        {
+          "id": "scrub_rod",
+          "type": "scrub",
+          "tool": "cloth",
+          "label": "Очистить шток от нагара",
+          "time_limit": 25.0,
+          "params": {
+            "rect": [600, 470, 80, 55],
+            "safe_speed_min": 80.0,
+            "safe_speed_max": 600.0,
+            "clean_rate": 0.0016,
+            "target_ratio": 0.92,
+            "friction_heat_rate": 0.012,
+            "overheat_penalty": 6.0
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 8.0,
+            "timeout": 8.0
+          }
+        },
+        {
+          "id": "hold_pressure",
+          "type": "hold",
+          "tool": "none",
+          "label": "Удержать давление в контуре",
+          "time_limit": 15.0,
+          "params": {
+            "rect": [605, 478, 70, 40],
+            "duration": 2.5,
+            "motion_tolerance": 2.0
+          },
+          "instability": {
+            "success": -6.0,
+            "fail": 10.0,
+            "timeout": 8.0
+          }
+        }
+      ],
+      "verify": {
+        "type": "pulse",
+        "expected": 0.90,
+        "tolerance": 0.10,
+        "time_limit": 8.0
+      },
+      "reward": 10.0,
+      "penalty": 12.0
+    },
+    {
+      "id": "cool_03",
+      "tag": "E-03",
+      "label": "Радиатор охлаждения",
+      "component_name": "Пластинчатый радиатор силовых ключей",
+      "fault_code": "T-088",
+      "symptom": "Перегрев силовых ключей под нагрузкой",
+      "doc_id": "doc_e03",
+      "zone": "back",
+      "tag_pos": [735, 320],
+      "difficulty": 1,
+      "steps": [
+        {
+          "id": "scrub_fins",
+          "type": "scrub",
+          "tool": "cloth",
+          "label": "Вычистить пыль из рёбер",
+          "time_limit": 25.0,
+          "params": {
+            "rect": [700, 285, 60, 90],
+            "safe_speed_min": 80.0,
+            "safe_speed_max": 600.0,
+            "clean_rate": 0.0016,
+            "target_ratio": 0.90,
+            "friction_heat_rate": 0.012,
+            "overheat_penalty": 6.0
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 8.0,
+            "timeout": 8.0
+          }
+        },
+        {
+          "id": "hold_airflow",
+          "type": "hold",
+          "tool": "none",
+          "label": "Держать поток воздуха",
+          "time_limit": 15.0,
+          "params": {
+            "rect": [705, 300, 50, 60],
+            "duration": 2.0,
+            "motion_tolerance": 2.4
+          },
+          "instability": {
+            "success": -6.0,
+            "fail": 10.0,
+            "timeout": 8.0
+          }
+        }
+      ],
+      "verify": {
+        "type": "pulse",
+        "expected": 0.95,
+        "tolerance": 0.08,
+        "time_limit": 8.0
+      },
+      "reward": 8.0,
+      "penalty": 10.0
+    },
+    {
+      "id": "sens_05",
+      "tag": "F-05",
+      "label": "Датчик кисти",
+      "component_name": "Тензодатчик кистевого захвата",
+      "fault_code": "S-052",
+      "symptom": "Пропадает сигнал усилия нажима",
+      "doc_id": "doc_f05",
+      "zone": "hand",
+      "tag_pos": [730, 435],
+      "difficulty": 3,
+      "steps": [
+        {
+          "id": "calib_press",
+          "type": "calibrate",
+          "tool": "none",
+          "label": "Откалибровать усилие нажима",
+          "time_limit": 25.0,
+          "params": {
+            "rect": [700, 420, 60, 30],
+            "min": 0.0,
+            "max": 100.0,
+            "target": 55.0,
+            "tolerance": 6.0,
+            "control": "drag"
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 8.0,
+            "timeout": 8.0
+          }
+        },
+        {
+          "id": "lock_harness",
+          "type": "cable_lock",
+          "tool": "none",
+          "label": "Подключить шлейф датчика",
+          "time_limit": 20.0,
+          "params": {
+            "socket_pos": [730, 435],
+            "socket_radius": 24.0,
+            "cable_anchor": [980, 640],
+            "keyway_angle_deg": 90.0,
+            "angle_tolerance_deg": 20.0,
+            "lock_hold_time": 0.7
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 10.0,
+            "timeout": 8.0
+          }
+        }
+      ],
+      "verify": {
+        "type": "pulse",
+        "expected": 0.88,
+        "tolerance": 0.10,
         "time_limit": 8.0
       },
       "reward": 10.0,
