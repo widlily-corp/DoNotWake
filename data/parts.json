@@ -348,6 +348,26 @@
             "fail": 10.0,
             "timeout": 8.0
           }
+        },
+        {
+          "id": "tune_thermo",
+          "type": "calibrate",
+          "tool": "none",
+          "label": "Выставить порог термопары",
+          "time_limit": 20.0,
+          "params": {
+            "rect": [705, 300, 50, 60],
+            "min": 0.0,
+            "max": 100.0,
+            "target": 70.0,
+            "tolerance": 5.0,
+            "control": "drag"
+          },
+          "instability": {
+            "success": -4.0,
+            "fail": 8.0,
+            "timeout": 8.0
+          }
         }
       ],
       "verify": {
@@ -407,6 +427,23 @@
           },
           "instability": {
             "success": -4.0,
+            "fail": 10.0,
+            "timeout": 8.0
+          }
+        },
+        {
+          "id": "check_response",
+          "type": "hold",
+          "tool": "none",
+          "label": "Проверить отклик датчика",
+          "time_limit": 15.0,
+          "params": {
+            "rect": [700, 420, 60, 30],
+            "duration": 2.5,
+            "motion_tolerance": 2.0
+          },
+          "instability": {
+            "success": -6.0,
             "fail": 10.0,
             "timeout": 8.0
           }

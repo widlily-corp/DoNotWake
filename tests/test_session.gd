@@ -532,17 +532,18 @@ func _test_critical_instability_and_shift_timeout() -> void:
 	_check(state.is_over(), "смена провалена по перегреву")
 	state.free()
 
-	# 2. Таймаут смены (600 с)
+	# 2. Таймаут смены — лимит берётся из data/robot.json (loop.shift_time_limit)
 	var state2 := GameStateScript.new()
 	state2.initialize_game()
 	state2.setup_loop(_create_test_parts(), _create_test_cards())
 	state2.start_shift()
-	state2.tick(605.0)
+	var shift_limit: float = state2._get_loop_float("shift_time_limit", 600.0)
+	state2.tick(shift_limit + 5.0)
 
-	_check(state2.current_phase == GameStateScript.Phase.SHIFT_FAILED, "таймаут смены 600 с -> SHIFT_FAILED")
+	_check(state2.current_phase == GameStateScript.Phase.SHIFT_FAILED, "таймаут смены %.0f с -> SHIFT_FAILED" % shift_limit)
 	_check(state2.is_over(), "смена провалена по времени")
 	state2.free()
-	_t("аварийные выходы: перегрев 100% и таймаут смены 600с")
+	_t("аварийные выходы: перегрев 100% и таймаут смены (лимит из данных)")
 
 
 func _test_legacy_flow_untouched() -> void:

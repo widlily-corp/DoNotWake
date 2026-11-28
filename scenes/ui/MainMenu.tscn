@@ -162,7 +162,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.55, 0.57, 1)
 theme_override_font_sizes/font_size = 11
-text = "СИСТЕМА ДИАГНОСТИКИ И РЕМОНТА v0.3"
+text = "СИСТЕМА ДИАГНОСТИКИ И РЕМОНТА v0.2.0"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="TVBezel/CRTScreen/VBoxMenu"]
